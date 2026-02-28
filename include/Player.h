@@ -27,7 +27,6 @@ public:
     bool addItem(std::unique_ptr<Item> item);
     bool useItem(size_t itemIndex);
     void showInventory() const;
-    //ГЕТТЕРЫ ДЛЯ ПАРАМЕТРОВ
 
 };
 
