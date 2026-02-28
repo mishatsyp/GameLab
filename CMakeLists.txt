@@ -3,4 +3,6 @@ project(GameLab)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(GameLab main.cpp)
+add_executable(GameLab main.cpp
+        include/Dungeon.h
+        include/Player.h)
