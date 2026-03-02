@@ -5,4 +5,10 @@ set(CMAKE_CXX_STANDARD 23)
 
 add_executable(GameLab main.cpp
         include/Dungeon.h
-        include/Player.h)
+        include/Player.h
+        include/Room.h
+        include/Item.h
+        include/Event.h
+        include/Entity.h
+        include/Random.h
+        include/Screen.h)

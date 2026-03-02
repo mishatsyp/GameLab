@@ -9,25 +9,21 @@ class Player;
 class Item {
 protected:
     std::string name;
-    std::string description;//!!!!
-    int value;
-
+    int durability;
 public:
-    Item(const std::string& itemName, const std::string& desc, int val);
+    Item(const std::string& itemName);
     virtual ~Item() = default;
 
     virtual void use(Player& player) = 0;
     virtual std::string getStats() const = 0;
     virtual std::string getItemType() const = 0;
+    virtual int getItemDurability() const=0;
    // virtual std::unique_ptr<Item> clone() const = 0;
 
-
     const std::string& getName() const { return name; }
-    const std::string& getDescription() const { return description; }
-    int getValue() const { return value; }
 };
 
-// Potion.h
+// POTION HEADER
 #ifndef POTION_H
 #define POTION_H
 
@@ -36,17 +32,14 @@ public:
 class Potion : public Item {
 private:
     int healAmount;
-
 public:
     Potion(int heal = 20);
-    Potion(const std::string& potionName, int heal, int val);
-
+    Potion(const std::string& potionName, int heal, int dur);
     virtual void use(Player& player) override;
-    virtual std::string getStats() const override;
-    virtual std::string getItemType() const override;
-    virtual std::unique_ptr<Item> clone() const override;
+    virtual std::string getStats() const override; //сколько раз может отхилить
+   // virtual std::unique_ptr<Item> clone() const override;
 
-    int getHealAmount() const { return healAmount; }
+    int getHealAmount() const { return healAmount; } //сколько хилит в целом
 };
 
 #endif // POTION_H
@@ -59,24 +52,23 @@ public:
 
 class Weapon : public Item {
 private:
-    int damageBonus;
-    int durability;
+    int damage;
     static constexpr int MAX_DURABILITY = 100;
 
 public:
-    Weapon(const std::string& weaponName, int bonus);
-    Weapon(const std::string& weaponName, int bonus, int dur, int val);
+    Weapon(const std::string& weaponName, int damage);
+    Weapon(const std::string& weaponName, int damage, int dur);
 
     virtual void use(Player& player) override;
-    virtual std::string getStats() const override;
-    virtual std::string getItemType() const override;
-    virtual std::unique_ptr<Item> clone() const override;
+    virtual std::string getStats() const override; //возвращает урон меча
+    // virtual std::string getItemType() const override;//тип пред
+    // virtual std::unique_ptr<Item> clone() const override;
 
     void reduceDurability(int amount = 5);
     bool isBroken() const { return durability <= 0; }
-    int getDamageBonus() const { return damageBonus; }
+    int getDamage() const { return damage; }
     int getDurability() const { return durability; }
-    int getMaxDurability() const { return MAX_DURABILITY; }
+    // int getMaxDurability() const { return MAX_DURABILITY; }
 };
 
 #endif // WEAPON_H
@@ -89,48 +81,23 @@ public:
 
 class Armor : public Item {
 private:
-    int defenseBonus;
+    int defense;
     int durability;
     static constexpr int MAX_DURABILITY = 100;
 
 public:
     Armor(int bonus = 5);
-    Armor(const std::string& armorName, int bonus, int dur, int val);
-
+    Armor(const std::string& armorName, int defen, int dur);
     virtual void use(Player& player) override;
-    virtual std::string getStats() const override;
+    virtual std::string getStats() const override; // - возвращает durability
     virtual std::string getItemType() const override;
-    virtual std::unique_ptr<Item> clone() const override;
+    // virtual std::unique_ptr<Item> clone() const override;
 
     void reduceDurability(int amount = 5);
-    int getDefenseBonus() const { return defenseBonus; }
+    int getDefense() const { return defense; }
     int getDurability() const { return durability; }
-    int getMaxDurability() const { return MAX_DURABILITY; }
+    // int getMaxDurability() const { return MAX_DURABILITY; }
 };
 
 #endif // ARMOR_H
 
-// Key.h (новый класс - ключи для выхода)
-#ifndef KEY_H
-#define KEY_H
-
-#include "Item.h"
-
-class Key : public Item {
-private:
-    std::string keyId;  // Уникальный ID ключа
-
-public:
-    Key(const std::string& keyName, const std::string& keyId);
-
-    virtual void use(Player& player) override;
-    virtual std::string getStats() const override;
-    virtual std::string getItemType() const override;
-    virtual std::unique_ptr<Item> clone() const override;
-
-    const std::string& getKeyId() const { return keyId; }
-};
-
-#endif // KEY_H
-
-#endif // ITEM_H
