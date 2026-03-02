@@ -1,38 +1,28 @@
-# IDE - полностью игнорируем папку CLion
-.idea/
-*.iml
-
-# Папки сборки
-cmake-build-*/
+# Папки сборки (обязательно!)
 build/
+cmake-build-*/
 out/
-CMakeFiles/
 
-# Скомпилированные файлы
-*.o
-*.obj
+# Настройки IDE (обязательно!)
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Бинарные файлы (обязательно!)
 *.exe
 *.out
+*.app
 *.dll
 *.so
 *.dylib
-*.a
-*.lib
 
-# Файлы CMake
-CMakeCache.txt
-cmake_install.cmake
-Makefile
-CTestTestfile.cmake
-*.cmake
-!CMakeLists.txt
+# Временные файлы
+*.o
+*.obj
+*.log
+*.cache
 
-# Системные файлы
+# Файлы OS
 .DS_Store
 Thumbs.db
-desktop.ini
-
-# Логи и временные файлы
-*.log
-*.tmp
-*~
