@@ -8,7 +8,7 @@
 #include <vector>
 #include <functional>
 #include "Player.h"
-#include "GameEngine.h"
+#include "Dungeon.h"
 
 /**
  * @brief Центральный класс движка игры
