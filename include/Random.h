@@ -1,3 +1,4 @@
+#include <random>
 class Random {
 private:
     std::mt19937 rng;

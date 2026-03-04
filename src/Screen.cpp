@@ -38,7 +38,6 @@
                     if (item->getItemType() == "weapon") sym = WEAPON_SYM;
                     else if (item->getItemType() == "potion") sym = POTION_SYM;
                     else if (item->getItemType() == "armor") sym = ARMOR_SYM;
-                    else if (item->getItemType() == "key") sym = KEY_SYM;
 
                     std::cout << "  " << sym << "  │";
                 }
@@ -64,8 +63,8 @@
         // Легенда
         std::cout << "Легенда: " << WEAPON_SYM << " - оружие  "
                   << POTION_SYM << " - зелье  "
-                  << ARMOR_SYM << " - броня  "
-                  << KEY_SYM << " - ключ\n\n";
+                  << ARMOR_SYM << " - броня\n\n";
+
 
         // Если есть предметы - показываем их описания
         if (player.getInventorySize() > 0) {
@@ -74,7 +73,7 @@
                 auto item = player.getItem(i);
                 if (item) {
                     std::cout << "  " << (i+1) << ". " << item->getName()
-                             << " (" << item->getDescription() << ")\n";
+                             <<"\n";
                 }
             }
         } else {
