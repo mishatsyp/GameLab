@@ -8,10 +8,6 @@
 #include "GameEngine.h"
 #include "Player.h"
 
-/**
- * @brief Класс для отрисовки игры в консоли
- * Упрощенная версия - только ASCII символы для комнат
- */
 class Screen {
 public:
     // Символы для отрисовки комнат - constexpr
@@ -23,7 +19,9 @@ public:
     /**
      * @brief Очистка экрана
      */
-    static void clearScreen(); //очищает консоль
+    static void clearScreen() {
+        std::cout << "\033[2J\033[1;1H";  //очищает консоль
+    }
 
     /**
      * @brief Отрисовка карты подземелья
