@@ -12,4 +12,5 @@ add_executable(GameLab main.cpp
         include/Entity.h
         include/Random.h
         include/Screen.h
-        src/Dungeon.cpp)
+        src/Dungeon.cpp
+        src/Player.cpp)

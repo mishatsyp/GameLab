@@ -7,8 +7,9 @@
 #include <optional>
 #include "Entity.h"
 #include "Item.h"
+#include "Screen.h"
 
-class Player{
+class Player {
 private:
     std::string name;
     bool inBattle;  // Флаг, находимся ли мы в бою
@@ -19,10 +20,11 @@ private:
     static constexpr size_t MAX_INVENTORY_SIZE = 8;
 public:
     explicit Player(const std::string& playerName);
-    virtual ~Player() override = default;
+    // virtual ~Player() override = default; <- incorrect
+    ~Player() = default;
 
     // Реализация виртуальных методов
-    virtual void attack(Entity& target) override;
+    void attack(Entity& target); // deleted virtual, override
     // Методы игрока
     bool addItem(std::unique_ptr<Item> item);
     bool useItem(size_t itemIndex);

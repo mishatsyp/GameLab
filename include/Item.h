@@ -100,4 +100,3 @@ public:
 };
 
 #endif // ARMOR_H
-

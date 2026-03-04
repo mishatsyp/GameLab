@@ -1,0 +1,32 @@
+#include "../include/Player.h"
+
+Player::Player(const std::string& playerName)
+    : name( playerName ), inBattle( false ),
+    health( 100 ), damage( 10 ) {}
+
+void Player::attack(Entity &target) {
+    target.takeDamage(damage);
+}
+
+bool Player::addItem(std::unique_ptr<Item> item) { // зачем bool
+    if (inventory.size() < MAX_INVENTORY_SIZE) {
+        inventory.push_back(std::move(item));
+        return true;
+    }
+    return false;
+}
+
+bool Player::useItem(const size_t itemIndex) {
+    if (itemIndex < inventory.size()) {
+        if (inventory[itemIndex]) {
+            // inventory[itemIndex] -> use(); ???
+            return true;
+        }
+    }
+    return false;
+}
+
+void Player::showInventory() const {
+    Screen screen;
+    // screen.drawPlayerInventory(); ???
+}
