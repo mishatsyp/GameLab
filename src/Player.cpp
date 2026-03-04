@@ -30,3 +30,16 @@ void Player::showInventory() const {
     Screen screen;
     // screen.drawPlayerInventory(); ???
 }
+
+int Player::getInventorySize() const {
+    return inventory.size();
+}
+
+Item* Player::getItem(size_t itemIndex) const {
+    if (itemIndex < inventory.size()) {
+        if (inventory[itemIndex]) {
+            return inventory[itemIndex].get();
+        }
+    }
+    return nullptr;
+}

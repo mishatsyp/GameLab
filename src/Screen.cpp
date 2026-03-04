@@ -104,4 +104,3 @@
      * @brief Получение символа комнаты по её типу
      */
     static char getRoomSymbol(const Room& room, bool isCurrent, bool isVisited);
-

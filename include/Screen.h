@@ -12,16 +12,14 @@ class Screen {
 public:
     // Символы для отрисовки комнат - constexpr
     static constexpr char EXIT_ROOM = 'E';
-    static constexpr char VISITED_ROOM = '◙';
+    static constexpr char VISITED_ROOM = 'X';
     static constexpr char UNKNOWN_ROOM = '?';
     static constexpr char PLAYER_SYMBOL = '@';
 
     /**
      * @brief Очистка экрана
      */
-    static void clearScreen() {
-        std::cout << "\033[2J\033[1;1H";  //очищает консоль
-    }
+    static void clearScreen();
 
     /**
      * @brief Отрисовка карты подземелья

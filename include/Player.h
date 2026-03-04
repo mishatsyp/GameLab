@@ -29,7 +29,8 @@ public:
     bool addItem(std::unique_ptr<Item> item);
     bool useItem(size_t itemIndex);
     void showInventory() const;
-
+    int getInventorySize() const;
+    Item* getItem(size_t itemIndex) const;
 };
 
 #endif // PLAYER_H
