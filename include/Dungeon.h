@@ -1,85 +1,94 @@
-// GameEngine.h
-#ifndef GAME_ENGINE_H
-#define GAME_ENGINE_H
+#ifndef DUNGEON_H
+#define DUNGEON_H
 
+#include <vector>
 #include <memory>
 #include <optional>
-#include <chrono>
-#include <vector>
-#include <functional>
-#include "Player.h"
-#include "Dungeon.h"
+#include "Room.h"
+#include "Random.h"
 
 /**
- * @brief Центральный класс движка игры
+ * @brief Класс подземелья (уровня)
+ * Управляет комнатами и генерацией уровня
  */
-class GameEngine {
+class Dungeon {
 private:
-    std::unique_ptr<Player> player;
-    std::unique_ptr<Dungeon> currentDungeon;
-    bool isRunning;
-    int currentLevel;
-    
-    // Для замера времени (требование из ТЗ)
-    using Clock = std::chrono::high_resolution_clock;
-    using TimePoint = std::chrono::time_point<Clock>;
-    TimePoint gameStartTime;
-    
+    // Вектор комнат - можно использовать как линейный уровень или сетку
+    std::vector<std::unique_ptr<Room>> rooms;
+
+    int currentRoomIndex;
+    int levelNumber;
+
+    // Параметры генерации - constexpr для оптимизации
+    static constexpr int MIN_ROOMS = 5;
+    static constexpr int MAX_ROOMS = 10;
+    static constexpr int MIN_ROOM_SIZE = 6;
+    static constexpr int MAX_ROOM_SIZE = 12;
+
 public:
-    GameEngine();
-    ~GameEngine() = default;
-    
+    // Конструктор генерирует подземелье
+    explicit Dungeon(int level = 1);
+
     // Запрещаем копирование
-    GameEngine(const GameEngine&) = delete;
-    GameEngine& operator=(const GameEngine&) = delete;
-    
+    Dungeon(const Dungeon&) = delete;
+    Dungeon& operator=(const Dungeon&) = delete;
+
     // Разрешаем перемещение
-    GameEngine(GameEngine&&) noexcept = default;
-    GameEngine& operator=(GameEngine&&) noexcept = default;
-    
-    /**
-     * @brief Вызов меню игры
-     */
-    void menu();
-    
-    /**
-     * @brief Инициализация новой игры
-     */
-    bool initialize();
-    
-    // /**
-    //  * @brief Обработка ввода игрока
-    //  * @return std::optional<char> - введенная команда
-    //  */
-    // std::optional<char> processInput();
+    Dungeon(Dungeon&&) noexcept = default;
+    Dungeon& operator=(Dungeon&&) noexcept = default;
 
     /**
-     * @brief Обработка текущей комнаты
+     * @brief Генерация нового уровня
+     * @param level номер уровня (влияет на сложность)
      */
-    void handleCurrentRoom();
-    
-    /**
-     * @brief Обработка боя
-     */
-    void handleBattle();
-    
-    /**
-     * @brief Переход на следующий уровень подземелья
-     */
-    void nextLevel();
-    
-    // /**
-    //  * @brief Отрисовка текущего состояния
-    //  */
-    // void render() const;
-    //
-    // Исключение для движка
+    void generateLevel(int level);
 
-    class GameException : public std::runtime_error {
-    public:
-        explicit GameException(const std::string& message)
-            : std::runtime_error("Game Error: " + message) {}
-    };
+    /**
+     * @brief Переход в следующую комнату
+     * @return std::optional<Room*> - указатель на комнату или nullopt
+     */
+    std::optional<Room*> goToNextRoom();
+
+    /**
+     * @brief Получение текущей комнаты
+     * @return Room* или nullptr (можно обернуть в optional)
+     */
+    Room* getCurrentRoom() const;
+
+    /**
+     * @brief Получение комнаты по индексу
+     * @param index индекс комнаты
+     * @return std::optional<Room*> - комната или nullopt
+     */
+    std::optional<Room*> getRoom(int index);
+
+    /**
+     * @brief Количество комнат на уровне
+     */
+    size_t getRoomCount() const { return rooms.size(); }
+
+    /**
+     * @brief Номер текущего уровня
+     */
+    int getLevelNumber() const { return levelNumber; }
+
+    /**
+     * @brief Проверка, пройден ли уровень
+     */
+    bool isLevelComplete() const;
+
+    /**
+     * @brief Создание следующего уровня
+     * @return unique_ptr на новый Dungeon
+     */
+    std::unique_ptr<Dungeon> createNextLevel();
+
+private:
+    /**
+     * @brief Генерация случайной комнаты
+     * @return unique_ptr на сгенерированную комнату
+     */
+    std::unique_ptr<Room> generateRandomRoom();
 };
 
-#endif // GAME_ENGINE_H
+#endif // DUNGEON_H
