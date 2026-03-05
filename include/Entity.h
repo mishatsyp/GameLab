@@ -1,4 +1,3 @@
-// Entity.h
 #ifndef ENTITY_H
 #define ENTITY_H
 
@@ -48,7 +47,7 @@ public:
 
 #endif // ENTITY_H
 
-// Monster.h - наследник Entity
+
 #ifndef MONSTER_H
 #define MONSTER_H
 
@@ -60,7 +59,7 @@ public:
  * Демонстрирует конкретную реализацию абстрактного класса
  */
 class Monster : public Entity {
-private:
+public:
     enum class MonsterType {
         GOBLIN,
         SKELETON,
@@ -69,9 +68,13 @@ private:
         GHOST
     };
 
+private:
     MonsterType type;
     int attack;
     int defense;
+
+    // Вспомогательный метод для получения имени
+    std::string getMonsterTypeName(MonsterType type) const;
 
 public:
     // Конструктор может генерировать монстра случайно
@@ -93,6 +96,7 @@ public:
             default: return 20;
         }
     }
+    static Monster createRandomMonster(int level);
 };
 
 #endif // MONSTER_H
