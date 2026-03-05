@@ -4,6 +4,7 @@
 #include <random>
 #include <optional>
 #include <algorithm>
+
 class Random {
 private:
     std::mt19937 rng;
@@ -64,7 +65,7 @@ public:
      */
     template<typename Container>
     void shuffle(Container& container) {
-        std::shuffle(container.begin(), container.end(), rng);
+        std::shuffle(container.begin(), container.end(), rng); // randomly rearranges elements in a given range
     }
 };
 
