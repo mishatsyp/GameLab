@@ -14,4 +14,5 @@ add_executable(GameLab main.cpp
         include/Screen.h
         src/GameEngine.cpp
         src/Player.cpp
-        src/Screen.cpp)
+        src/Screen.cpp
+        src/Random.cpp)

@@ -1,4 +1,9 @@
+#ifndef RANDOM_H
+#define RANDOM_H
+
 #include <random>
+#include <optional>
+#include <algorithm>
 class Random {
 private:
     std::mt19937 rng;
