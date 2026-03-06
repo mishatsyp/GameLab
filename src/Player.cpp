@@ -43,3 +43,19 @@ Item* Player::getItem(size_t itemIndex) const {
     }
     return nullptr;
 }
+
+int Player::getHealth() const {
+    return health;
+}
+
+void Player::setHealth(int h) {
+    health = h;
+}
+
+int Player::getDamage() const {
+    return damage;
+}
+
+void Player::setDamage(int d) {
+    damage = d;
+}

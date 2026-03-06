@@ -28,6 +28,10 @@ public:
     // Методы игрока
     bool addItem(std::unique_ptr<Item> item);
     bool useItem(size_t itemIndex);
+    int getHealth() const;
+    void setHealth(int h);
+    int getDamage() const;
+    void setDamage(int d);
     void showInventory() const;
     int getInventorySize() const;
     Item* getItem(size_t itemIndex) const;

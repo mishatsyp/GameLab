@@ -4,6 +4,8 @@
 #include <string>
 #include <memory>
 #include "Item.h"
+#include <iostream>
+#include "Player.h"
 
 class Player;
 
@@ -12,7 +14,7 @@ protected:
     std::string name;
     int durability;
 public:
-    Item(const std::string& itemName);
+    Item(const std::string& itemName, int dur);
     virtual ~Item() = default;
 
     virtual void use(Player& player) = 0;
@@ -20,7 +22,6 @@ public:
     virtual std::string getItemType() const = 0;
     virtual int getItemDurability() const=0;
    // virtual std::unique_ptr<Item> clone() const = 0;
-
     const std::string& getName() const { return name; }
 };
 
@@ -34,9 +35,11 @@ private:
 public:
     Potion(int heal = 20);
     Potion(const std::string& potionName, int heal, int dur);
-    virtual void use(Player& player) override;
-    virtual std::string getStats() const override; //сколько раз может отхилить
-   // virtual std::unique_ptr<Item> clone() const override;
+    void use(Player& player) override;
+    std::string getStats() const override; //сколько раз может отхилить
+    std::string getItemType() const override;
+    virtual int getItemDurability() const override;
+    // virtual std::unique_ptr<Item> clone() const override;
 
     int getHealAmount() const { return healAmount; } //сколько хилит в целом
 };
@@ -54,11 +57,11 @@ public:
     virtual std::string getStats() const override; //возвращает урон меча
     // virtual std::string getItemType() const override;//тип пред
     // virtual std::unique_ptr<Item> clone() const override;
-
+    bool isBroken() const{};
     void reduceDurability(int amount = 5);
-    bool isBroken() const { return durability <= 0; }
     int getDamage() const { return damage; }
-    int getDurability() const { return durability; }
+    int getItemDurability() const override;
+    std::string getItemType() const override;
     // int getMaxDurability() const { return MAX_DURABILITY; }
 };
 
@@ -73,8 +76,9 @@ public:
     Armor(int bonus = 5);
     Armor(const std::string& armorName, int defen, int dur);
     virtual void use(Player& player) override;
-    virtual std::string getStats() const override; // - возвращает durability
-    virtual std::string getItemType() const override;
+    std::string getStats() const override; // - возвращает durability
+    std::string getItemType() const override;
+    int getItemDurability() const override;
     // virtual std::unique_ptr<Item> clone() const override;
 
     void reduceDurability(int amount = 5);
