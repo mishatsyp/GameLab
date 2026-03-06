@@ -3,6 +3,7 @@
 
 #include <string>
 #include <memory>
+#include "Item.h"
 
 class Player;
 
@@ -23,11 +24,9 @@ public:
     const std::string& getName() const { return name; }
 };
 
-// POTION HEADER
-#ifndef POTION_H
-#define POTION_H
 
-#include "Item.h"
+
+
 
 class Potion : public Item {
 private:
@@ -41,14 +40,6 @@ public:
 
     int getHealAmount() const { return healAmount; } //сколько хилит в целом
 };
-
-#endif // POTION_H
-
-// Weapon.h
-#ifndef WEAPON_H
-#define WEAPON_H
-
-#include "Item.h"
 
 class Weapon : public Item {
 private:
@@ -71,13 +62,6 @@ public:
     // int getMaxDurability() const { return MAX_DURABILITY; }
 };
 
-#endif // WEAPON_H
-
-// Armor.h
-#ifndef ARMOR_H
-#define ARMOR_H
-
-#include "Item.h"
 
 class Armor : public Item {
 private:
@@ -99,4 +83,4 @@ public:
     // int getMaxDurability() const { return MAX_DURABILITY; }
 };
 
-#endif // ARMOR_H
+#endif

@@ -7,18 +7,17 @@
     // static constexpr char UNKNOWN_ROOM = '?';
     // static constexpr char PLAYER_SYMBOL = '@';
 
-    static void Screen::clearScreen() {
+    void Screen::clearScreen() {
         std::cout << "\033[2J\033[1;1H";  //очищает консоль
     }
     static void drawDungeonMap(const Dungeon& dungeon, const Player& player){} //Отрисовка карты подземелья
     static void drawCurrentRoomInfo(const Dungeon& dungeon); //Отрисовка информации о текущей комнате
-    static void drawPlayerInventory(const Player& player) {} //Отрисовка инвентаря
 
-    static void Screen::drawInventory(const Player& player) {
-        constexpr char EMPTY_SLOT = '·';
-        constexpr char WEAPON_SYM = '⚔';  // меч
-        constexpr char POTION_SYM = '🧪'; // зелье (можно заменить на '▲' если не поддерживается)
-        constexpr char ARMOR_SYM = '🛡';   // броня (можно заменить на '◆' если не поддерживается)
+     void Screen::drawInventory(const Player& player) {
+        char EMPTY_SLOT = 'X';
+        char WEAPON_SYM = 'S';  // меч
+        char POTION_SYM = 'P'; // зелье (можно заменить на '▲' если не поддерживается)
+        char ARMOR_SYM = 'A';   // броня (можно заменить на '◆' если не поддерживается)
         std::cout << "\n";
         std::cout << "╔══════════════════════════════════════════════════════════╗\n";
         std::cout << "║                        ИНВЕНТАРЬ                        ║\n";
@@ -88,12 +87,51 @@
     /**
      * @brief Отрисовка сообщения
      */
-    static void drawMessage(const std::string& message);
+void Screen::drawMessage(const std::string& message) {
+    std::cout << "\n";
+    std::cout << "╔══════════════════════════════════════════════════════════╗\n";
+    std::cout << "║                       СООБЩЕНИЕ                          ║\n";
+    std::cout << "╚══════════════════════════════════════════════════════════╝\n\n";
+
+    // Разбиваем длинное сообщение на строки по 50 символов
+    std::string msg = message;
+    size_t maxLength = 100;
+
+    while (msg.length() > maxLength) {
+        size_t spacePos = msg.find_last_of(' ', maxLength);
+        if (spacePos == std::string::npos) spacePos = maxLength;
+
+        std::cout << "  " << msg.substr(0, spacePos) << "\n";
+        msg = msg.substr(spacePos + 1);
+    }
+    if (!msg.empty()) {
+        std::cout << "  " << msg << "\n";
+    }
+
+    std::cout << "\n──────────────────────────────────────────────────\n";
+    std::cout << "  Нажмите Enter чтобы продолжить...";
+    std::cin.get();
+}
 
     /**
      * @brief Отрисовка меню
      */
-    static void drawMenu(const std::vector<std::string>& options, int selected = 0);
+void Screen::drawMenu() {
+        clearScreen();
+        std::cout << "\n";
+        std::cout << "╔══════════════════════════════════════════════════════════╗\n";
+        std::cout << "║                   DUNGEON CRAWLER                        ║\n";
+        std::cout << "╚══════════════════════════════════════════════════════════╝\n\n";
+        std::cout << "                 ░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
+        std::cout << "                 ░      DUNGEON CRAWLER   ░\n";
+        std::cout << "                 ░░░░░░░░░░░░░░░░░░░░░░░░░░░\n\n";
+        std::cout << "                    ╔════════════════╗\n";
+        std::cout << "                    ║  1. НОВАЯ ИГРА  ║\n";
+        std::cout << "                    ║  2. ВЫХОД       ║\n";
+        std::cout << "                    ╚════════════════╝\n\n";
+        std::cout << "──────────────────────────────────────────────────\n";
+        std::cout << "  Введите 1 или 2: ";
+    }
 
     /**
      * @brief Отрисовка боя

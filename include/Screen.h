@@ -34,7 +34,7 @@ public:
     /**
      * @brief Отрисовка инвентаря
      */
-    static void drawPlayerInventory(const Player& player);
+    static void drawInventory(const Player& player);
 
     /**
      * @brief Отрисовка сообщения
@@ -44,7 +44,7 @@ public:
     /**
      * @brief Отрисовка меню
      */
-    static void drawMenu(const std::vector<std::string>& options, int selected = 0);
+    static void drawMenu();
 
     /**
      * @brief Отрисовка боя
