@@ -17,4 +17,5 @@ add_executable(GameLab main.cpp
         src/Screen.cpp
         src/Random.cpp
         src/Entity.cpp
-        src/Item.cpp)
+        src/Item.cpp
+        src/Room.cpp)

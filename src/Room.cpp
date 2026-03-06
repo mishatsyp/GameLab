@@ -35,7 +35,7 @@ std::string Room::enter(Player& player) {
             return "Вы нашли выход!";
         }
     }
-а
+
     return "Вы снова в этой комнате.";
 }
 
