@@ -81,7 +81,7 @@ public:
     explicit Monster(MonsterType monstertype, int atk, int def);
     // Реализация виртуальных методов
     virtual void takeDamage(int amount) override;
-    virtual void attack(Entity& target) override;
+    virtual void monsterAttack(Entity& target);
     // virtual std::string getDescription() const override;
     virtual bool isAlive() const override;
 
