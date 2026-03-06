@@ -1,4 +1,3 @@
-// GameEngine.h
 #ifndef GAME_ENGINE_H
 #define GAME_ENGINE_H
 
@@ -9,6 +8,7 @@
 #include <functional>
 #include "Player.h"
 #include "Dungeon.h"
+#include "Screen.h"
 
 /**
  * @brief Центральный класс движка игры
@@ -53,7 +53,7 @@ public:
     /**
      * @brief Обработка текущей комнаты
      */
-    void handleCurrentRoom();
+    void handleCurrentRoom(); // добавить аргумент dungeon?
     
     /**
      * @brief Обработка боя
