@@ -1,5 +1,5 @@
 // Screen.h
-#ifndef SCREEN_H
+    #ifndef SCREEN_H
 #define SCREEN_H
 
 #include <iostream>
@@ -51,7 +51,7 @@ public:
      */
     static void drawBattle(const Player& player, const Monster& monster);
 
-    static void chooseAction();
+    static int chooseAction();
 
 private:
     /**
