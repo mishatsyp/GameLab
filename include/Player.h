@@ -18,6 +18,7 @@ private:
     int health;
     int damage;
     static constexpr size_t MAX_INVENTORY_SIZE = 8;
+    std::pair<int, int> position;
 public:
     explicit Player(const std::string& playerName);
     // virtual ~Player() override = default; <- incorrect

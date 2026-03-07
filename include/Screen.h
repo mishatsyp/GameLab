@@ -51,6 +51,8 @@ public:
      */
     static void drawBattle(const Player& player, const Monster& monster);
 
+    static void chooseAction();
+
 private:
     /**
      * @brief Получение символа комнаты по её типу

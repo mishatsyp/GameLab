@@ -31,17 +31,21 @@ bool GameEngine::initialize() {
         currentDungeon = std::make_unique<Dungeon>(currentLevel);
 
         isRunning = true;
-        std::cout << "Игра успешно инициализирована!" << std::endl;
 
         // Вызываем меню из Screen
         menu();
+
+        //screen.drawDungeonMap(dungeon, player)
+
+        while (player->getHealth() > 0) {
+
+        }
 
         return true;
     } catch (const std::exception& e) {
         std::cerr << "Ошибка инициализации: " << e.what() << std::endl;
         return false;
     }
-    return true;
 }
 
 void GameEngine::handleCurrentRoom() {
