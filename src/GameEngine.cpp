@@ -1,4 +1,5 @@
 #include "../include/Dungeon.h"
+#include "../include/Player.h"
 
 GameEngine::GameEngine()
     : isRunning(false)
@@ -38,7 +39,22 @@ bool GameEngine::initialize() {
         //screen.drawDungeonMap(dungeon, player)
 
         while (player->getHealth() > 0) {
+            int choice;
+            Screen::chooseAction();
+            std::cin >> choice;
+            switch (choice) {
+                case 1:
+                    //look
 
+                case 2:
+                    player->showInventory();
+
+                case 3:
+                    //move to the next room
+
+                default:
+                    std::cout << "Choose another option";
+            }
         }
 
         return true;
@@ -49,8 +65,7 @@ bool GameEngine::initialize() {
 }
 
 void GameEngine::handleCurrentRoom() {
-    Screen screen;
-    screen.drawCurrentRoomInfo(currentDungeon);
+    Screen::drawCurrentRoomInfo(currentDungeon);
 }
 
 void GameEngine::handleBattle() {
@@ -65,7 +80,7 @@ void GameEngine::nextLevel() {
     }
 
     currentLevel++;
-    screen.drawMessage("ПЕРЕХОД НА УРОВЕНЬ ");
+    Screen::drawMessage("ПЕРЕХОД НА УРОВЕНЬ ");
 
     // Создаем новый уровень подземелья
     currentDungeon = std::make_unique<Dungeon>(currentLevel);
