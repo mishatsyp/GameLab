@@ -1,0 +1,253 @@
+#include "../include/Event.h"
+#include "../include/Player.h"
+#include "../include/Item.h"
+#include <iostream>
+#include <vector>
+#include <string>
+#include <memory>
+
+// Конструктор по умолчанию
+Event::Event() : healthEffect(0), isCompleted(false) {}
+
+/**
+ * @brief Генерация случайного события
+ * @param level уровень подземелья (влияет на сложность)
+ */
+void Event::generateRandomEvent(int level) {
+    generateRandomText(level);
+
+    // Генерируем случайные последствия для разных выборов
+    Random& rng = Random::getInstance();
+
+    // Случайное влияние на здоровье (отрицательное или положительное)
+    healthEffect = rng.getInt(-15 - level * 2, 10 + level);
+
+    // 30% шанс получить предмет
+    if (rng.getBool(0.3)) {
+        std::vector<std::string> possibleItems = {
+            "Зелье здоровья",
+            "Меч",
+            "Кинжал",
+            "Щит",
+            "Амулет"
+        };
+        auto optItem = rng.getRandomElement(possibleItems);
+        if (optItem.has_value()) {
+            itemReward = optItem.value();
+        }
+    }
+}
+
+/**
+ * @brief Генерация случайного текста для события
+ */
+void Event::generateRandomText(int level) {
+    Random& rng = Random::getInstance();
+
+    // Шаблоны событий в зависимости от уровня
+    std::vector<std::string> eventTemplates;
+    std::vector<std::vector<std::string>> outcomeTemplates;
+
+    if (level <= 2) {
+        // События для начальных уровней
+        eventTemplates = {
+            "Вы находите старый сундук в углу комнаты.",
+            "На полу лежит блестящий предмет.",
+            "Вы слышите странный шорох за спиной.",
+            "Из стены торчит странный рычаг.",
+            "Вы замечаете чей-то скелет, прислоненный к стене."
+        };
+
+        outcomeTemplates = {
+            {"Открыть сундук", "Пройти мимо", "Осмотреть внимательнее"},
+            {"Поднять предмет", "Не трогать", "Пнуть ногой"},
+            {"Обернуться", "Ускорить шаг", "Крикнуть"},
+            {"Дернуть рычаг", "Не трогать", "Осмотреть механизм"},
+            {"Обыскать скелет", "Почтить память", "Пройти мимо"}
+        };
+    } else if (level <= 4) {
+        // События для средних уровней
+        eventTemplates = {
+            "Вы натыкаетесь на забытый алтарь древнего божества.",
+            "Из стены сочится странная светящаяся жидкость.",
+            "На полу вы замечаете круг телепортации.",
+            "Статуя с драгоценными камнями вместо глаз смотрит на вас.",
+            "Вы слышите шепот, зовущий вас по имени."
+        };
+
+        outcomeTemplates = {
+            {"Помолиться алтарю", "Осмотреть алтарь", "Пройти мимо"},
+            {"Попробовать жидкость", "Набрать в бутылку", "Обойти"},
+            {"Активировать круг", "Осмотреть символы", "Не рисковать"},
+            {"Вынуть камни", "Поклониться статуе", "Не трогать"},
+            {"Ответить шепоту", "Игнорировать", "Заткнуть уши"}
+        };
+    } else {
+        // События для глубоких уровней
+        eventTemplates = {
+            "Перед вами появляется призрачная фигура и обращается к вам.",
+            "Вы находите древний свиток с могущественным заклинанием.",
+            "Земля разверзается, открывая вход в подземную пещеру.",
+            "Магический кристалл пульсирует энергией в центре комнаты.",
+            "Вы чувствуете присутствие древнего стража."
+        };
+
+        outcomeTemplates = {
+            {"Поговорить с духом", "Атаковать", "Убежать"},
+            {"Прочитать свиток", "Взять с собой", "Сжечь"},
+            {"Спуститься вниз", "Осмотреть края", "Закрыть проход"},
+            {"Коснуться кристалла", "Разбить", "Изучить"},
+            {"Попытаться договориться", "Подготовиться к битве", "Спрятаться"}
+        };
+    }
+
+    // Выбираем случайное событие и соответствующие исходы
+    size_t eventIndex = rng.getInt(0, eventTemplates.size() - 1);
+    description = eventTemplates[eventIndex];
+
+    // Добавляем контекст уровня
+    description += " (Уровень подземелья: " + std::to_string(level) + ")";
+
+    // Выбираем исходы для этого события
+    if (eventIndex < outcomeTemplates.size()) {
+        outcomes = outcomeTemplates[eventIndex];
+    } else {
+        // Запасные варианты
+        outcomes = {"Выбрать вариант 1", "Выбрать вариант 2", "Выбрать вариант 3"};
+    }
+}
+
+/**
+ * @brief Применение последствий к игроку
+ */
+void Event::applyEffects(Player& player, int choiceHealth, const std::string& choiceItem) {
+    // Применяем влияние на здоровье
+    if (choiceHealth != 0) {
+        int newHealth = player.getHealth() + choiceHealth;
+        player.setHealth(newHealth);
+
+        if (choiceHealth > 0) {
+            std::cout << "Вы восстановили " << choiceHealth << " здоровья!\n";
+        } else if (choiceHealth < 0) {
+            std::cout << "Вы потеряли " << -choiceHealth << " здоровья!\n";
+        }
+    }
+
+    // Добавляем предмет, если есть
+    if (!choiceItem.empty()) {
+        std::unique_ptr<Item> newItem;
+
+        // Создаем соответствующий предмет
+        if (choiceItem.find("Зелье") != std::string::npos) {
+            newItem = std::make_unique<Potion>(choiceItem, 20, 3);
+        } else if (choiceItem.find("Меч") != std::string::npos) {
+            newItem = std::make_unique<Weapon>(choiceItem, 15);
+        } else if (choiceItem.find("Кинжал") != std::string::npos) {
+            newItem = std::make_unique<Weapon>(choiceItem, 8);
+        } else if (choiceItem.find("Щит") != std::string::npos) {
+            newItem = std::make_unique<Armor>(choiceItem, 5, 100);
+        } else if (choiceItem.find("Амулет") != std::string::npos) {
+            newItem = std::make_unique<Armor>(choiceItem, 3, 50);
+        } else {
+            newItem = std::make_unique<Potion>(choiceItem, 15, 2);
+        }
+
+        if (player.addItem(std::move(newItem))) {
+            std::cout << "Вы получили предмет: " << choiceItem << "!\n";
+        } else {
+            std::cout << "Инвентарь полон! Предмет " << choiceItem << " не может быть добавлен.\n";
+        }
+    }
+}
+
+/**
+ * @brief Выбор варианта действия
+ * @param choice номер выбранного варианта (0, 1 или 2)
+ * @param player ссылка на игрока
+ * @return текст результата выбора
+ */
+std::string Event::makeChoice(int choice, Player& player) {
+    if (choice < 0 || choice >= static_cast<int>(outcomes.size())) {
+        return "Неверный выбор!";
+    }
+
+    if (isCompleted) {
+        return "Это событие уже завершено.";
+    }
+
+    Random& rng = Random::getInstance();
+    std::string result;
+    int choiceHealth = 0;
+    std::string choiceItem;
+
+    // Генерируем результат в зависимости от выбора
+    switch (choice) {
+        case 0: // Первый вариант - обычно осторожный/исследовательский
+            result = "Вы решили " + outcomes[0] + ". ";
+            if (rng.getBool(0.6)) {
+                // Хороший исход
+                choiceHealth = rng.getInt(5, 15);
+                if (rng.getBool(0.3) && itemReward.empty()) {
+                    choiceItem = "Малое зелье здоровья";
+                }
+                result += "Вам повезло! ";
+            } else {
+                // Плохой исход
+                choiceHealth = -rng.getInt(3, 10);
+                result += "Что-то пошло не так... ";
+            }
+            break;
+
+        case 1: // Второй вариант - нейтральный
+            result = "Вы решили " + outcomes[1] + ". ";
+            if (rng.getBool(0.5)) {
+                choiceHealth = rng.getInt(-5, 10);
+                if (rng.getBool(0.2) && !itemReward.empty()) {
+                    choiceItem = itemReward;
+                }
+                result += "Ничего особенного. ";
+            } else {
+                result += "Ничего не произошло. ";
+            }
+            break;
+
+        case 2: // Третий вариант - рискованный
+            result = "Вы решили " + outcomes[2] + ". ";
+            if (rng.getBool(0.3)) {
+                // Большая удача
+                choiceHealth = rng.getInt(10, 25);
+                if (!itemReward.empty()) {
+                    choiceItem = itemReward;
+                }
+                result += "Невероятная удача! ";
+            } else {
+                // Большая неудача
+                choiceHealth = -rng.getInt(10, 20);
+                result += "Это была плохая идея... ";
+            }
+            break;
+
+        default:
+            result = "Вы просто стоите в нерешительности. ";
+            break;
+    }
+
+    // Применяем эффекты
+    applyEffects(player, choiceHealth, choiceItem);
+
+    // Отмечаем событие как завершенное
+    isCompleted = true;
+
+    // Добавляем информацию о полученном уроне/лечении к результату
+    if (choiceHealth > 0) {
+        result += "Вы восстановили " + std::to_string(choiceHealth) + " HP.";
+    } else if (choiceHealth < 0) {
+        result += "Вы потеряли " + std::to_string(-choiceHealth) + " HP.";
+    }
+
+    if (!choiceItem.empty()) {
+        result += " Вы получили " + choiceItem + "!";
+    }
+
+    return result;
+}
