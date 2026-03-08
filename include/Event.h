@@ -51,7 +51,7 @@ private:
     /**
      * @brief Применение последствий к игроку
      */
-    void applyEffects(Player& player, int choiceHealth,x const std::string& choiceItem);
+    void applyEffects(Player& player, int choiceHealth, const std::string& choiceItem);
 };
 
 #endif // EVENT_H
