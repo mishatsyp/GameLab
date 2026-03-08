@@ -9,6 +9,11 @@
 
 class Room {
 private:
+    enum class RoomType {
+        EMPTY,      // Пустая комната (только осмотреться)
+        EVENT,      // Комната с событием
+        EXIT        // Выход на следующий уровень
+    };
     RoomType type;
     bool isExplored;           // Были ли уже в этой комнате
 
@@ -16,11 +21,6 @@ private:
     std::unique_ptr<Event> roomEvent;
 
 public:
-    enum class RoomType {
-        EMPTY,      // Пустая комната (только осмотреться)
-        EVENT,      // Комната с событием
-        EXIT        // Выход на следующий уровень
-    };
     /**
      * @param roomType тип комнаты
      * @param number номер комнаты
@@ -55,7 +55,7 @@ public:
 
     // Геттеры
     RoomType getType() const { return type; }
-    bool isExplored() const { return isExplored; }
+    bool isExplored() const { return isExplored; } // ЛЕНЯЯЯЯ НАДО ФИКСИТЬ
     /**
      * @brief Проверка, есть ли в комнате непройденное событие
      */
