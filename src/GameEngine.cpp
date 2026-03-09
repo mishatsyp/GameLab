@@ -35,7 +35,7 @@ bool GameEngine::initialize() {
         // Вызываем меню из Screen
         menu();
 
-        //screen.drawDungeonMap(dungeon, player)
+        Screen::drawDungeonMap(currentDungeon); // может в цикл?
 
         while (player->getHealth() > 0 || player->getLevel()<=5) {
             int choice;
@@ -49,7 +49,49 @@ bool GameEngine::initialize() {
 
                 case 2:
                     player->showInventory();
-                    //"Использовать: u [номер]  |  Назад: b\n"
+                    std::cout << "\nИспользовать: u [номер]  |  Назад: b\n";
+
+                    char command;
+                    int itemIndex;
+                    std::cin >> command;
+
+                    if (command == 'u') {
+                        std::cin >> itemIndex;
+                        // Индексация предметов с 1 для удобства пользователя
+                        int inventorySize = player->getInventorySize();
+
+                        if (itemIndex >= 1 && itemIndex <= inventorySize) {
+                            // Получаем предмет по индексу (конвертируем в 0-базовый индекс)
+                            Item* item = player->getItem(itemIndex - 1);
+
+                            if (item) {
+                                // Пытаемся использовать предмет
+                                try {
+                                    // Используем существующий метод useItem, но он пока не реализован
+                                    // Временно используем прямой вызов use()
+                                    item->use(*player);
+                                    std::cout << "Предмет \"" << item->getName() << "\" использован.\n";
+
+                                    // Проверяем, не сломался ли предмет (для оружия и брони)
+                                    if (item->getItemDurability() <= 0) {
+                                        std::cout << "Предмет сломался и удален из инвентаря.\n";
+                                        player->removeItem(itemIndex - 1);
+                                    }
+                                } catch (const std::exception& e) {
+                                    std::cout << "Ошибка при использовании предмета: " << e.what() << "\n";
+                                }
+                            } else {
+                                std::cout << "Ошибка: предмет не найден!\n";
+                            }
+                        } else {
+                            std::cout << "Неверный номер предмета! У вас " << inventorySize << " предметов.\n";
+                        }
+                    } else if (command == 'b' || command == 'B') {
+                        // Просто выходим из инвентаря
+                        std::cout << "Возврат к основным действиям.\n";
+                    } else {
+                        std::cout << "Неверная команда!\n";
+                    }
                     break;
 
                 case 3: {
@@ -84,10 +126,6 @@ bool GameEngine::initialize() {
                             std::cout << "Неверное направление!\n";
                             break;
                     }
-
-                    // Проверяем, есть ли комната по новым координатам
-                    // В матрице Dungeon: 1 - комната, 2 - выход
-                    // int cellValue = currentDungeon->getCell(newX, newY); // можно в целом оставить, но там ошибочка)
 
                     if (currentDungeon->getCell(newX, newY) == 1 || currentDungeon->getCell(newX, newY) == 2) {
                         // Можно двигаться - обновляем позицию игрока

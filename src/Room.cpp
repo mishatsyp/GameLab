@@ -1,7 +1,7 @@
 // Room.cpp
-#include "Room.h"
-#include "Random.h"
-#include "Screen.h"
+#include "../include/Room.h"
+#include "../include/Random.h"
+#include "../include/Screen.h"
 #include <iostream>
 
 Room::Room(RoomType roomType) : type(roomType), isExplored(false) {

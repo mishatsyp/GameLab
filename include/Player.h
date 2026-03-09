@@ -14,10 +14,10 @@ private:
     std::string name;
     bool inBattle;  // Флаг, находимся ли мы в бою
     // Инвентарь - unique_ptr для предметов
-    std::vector<std::unique_ptr<Item>> inventory;
     int health;
     int damage;
     int level;
+    std::vector<std::unique_ptr<Item>> inventory;
     static constexpr size_t MAX_INVENTORY_SIZE = 8;
     std::pair<int, int> position;
 public:
@@ -39,6 +39,7 @@ public:
     Item* getItem(size_t itemIndex) const;
     int getLevel() const;
     void setLevel(int l);
+    void removeItem(size_t index);
 };
 
 #endif // PLAYER_H

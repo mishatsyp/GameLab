@@ -68,3 +68,8 @@ void Player::setLevel(int l) {
     level=l;
 }
 
+void Player::removeItem(size_t index) {
+    if (index < inventory.size()) {
+        inventory.erase(inventory.begin() + static_cast<int>(index));
+    }
+}
