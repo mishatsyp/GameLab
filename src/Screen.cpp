@@ -89,13 +89,9 @@
      */
 void Screen::drawMessage(const std::string& message) {
     std::cout << "\n";
-    std::cout << "╔══════════════════════════════════════════════════════════╗\n";
-    std::cout << "║                       СООБЩЕНИЕ                          ║\n";
-    std::cout << "╚══════════════════════════════════════════════════════════╝\n\n";
-
     // Разбиваем длинное сообщение на строки по 50 символов
     std::string msg = message;
-    size_t maxLength = 100;
+    size_t maxLength = 1000;
 
     while (msg.length() > maxLength) {
         size_t spacePos = msg.find_last_of(' ', maxLength);
@@ -170,3 +166,54 @@ int Screen::chooseAction() {
      * @brief Получение символа комнаты по её типу
      */
     static char getRoomSymbol(const Room& room, bool isCurrent, bool isVisited);
+
+// Screen.h добавить
+static void drawDungeonMap(const Dungeon& dungeon);
+
+// Screen.cpp
+void Screen::drawDungeonMap(const Dungeon& dungeon) {
+    std::cout << "\n";
+    std::cout << "╔══════════════════════════════════════════════════════════╗\n";
+    std::cout << "║                      КАРТА ПОДЗЕМЕЛЬЯ                   ║\n";
+    std::cout << "╚══════════════════════════════════════════════════════════╝\n\n";
+
+    // Получаем размеры матрицы
+    int height = 4;  // в наших паттернах всегда 4 строки
+    int width = 4;   // в наших паттернах всегда 4 столбца
+
+    // Рисуем карту
+    for (int y = 0; y < height; y++) {
+        std::cout << "  ";
+        for (int x = 0; x < width; x++) {
+            int cell = dungeon.getCell(x, y);
+
+            // Проверяем, находится ли игрок в этой клетке
+            bool isPlayerHere = (x == dungeon.getCurrentX() && y == dungeon.getCurrentY());
+
+            if (cell == 0) {
+                // Пустота (стена)
+                std::cout << "██████";
+            } else if (cell == 1) {
+                // Обычная комната
+                if (isPlayerHere) {
+                    std::cout << "[ 👤 ]";  // игрок в комнате
+                } else {
+                    std::cout << "[ ☐  ]";  // пустая комната
+                }
+            } else if (cell == 2) {
+                // Выход
+                if (isPlayerHere) {
+                    std::cout << "[ 👤➡]";  // игрок на выходе
+                } else {
+                    std::cout << "[ ➡  ]";  // выход
+                }
+            }
+        }
+        std::cout << "\n\n";  // двойной отступ между рядами
+    }
+
+    // Легенда
+    std::cout << "──────────────────────────────────────────────────\n";
+    std::cout << "  ☐ - комната    ➡ - выход    👤 - вы здесь\n";
+    std::cout << "──────────────────────────────────────────────────\n";
+}

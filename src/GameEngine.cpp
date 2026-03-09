@@ -5,7 +5,6 @@ GameEngine::GameEngine()
     : isRunning(false)
     , currentLevel(1)
     , gameStartTime(Clock::now()) {
-    // Инициализация полей
 }
 
 void GameEngine::menu() {
@@ -38,10 +37,11 @@ bool GameEngine::initialize() {
 
         //screen.drawDungeonMap(dungeon, player)
 
-        while (player->getHealth() > 0) {
+        while (player->getHealth() > 0 || player->getLevel()<=5) {
             int choice;
             Screen::chooseAction();
             std::cin >> choice;
+            Screen::clearScreen();
             switch (choice) {
                 case 1:
                     //look
@@ -49,6 +49,7 @@ bool GameEngine::initialize() {
 
                 case 2:
                     player->showInventory();
+                    //"Использовать: u [номер]  |  Назад: b\n"
                     break;
 
                 case 3: {
@@ -58,6 +59,7 @@ bool GameEngine::initialize() {
 
                     // Спрашиваем у игрока направление движения
                     char direction;
+                    Screen::drawDungeonMap();
                     Screen::drawMessage("Куда хотите пойти? (w - вверх, s - вниз, a - влево, d - вправо): ");
                     std::cin >> direction;
 
@@ -141,6 +143,7 @@ void GameEngine::handleBattle() {
 
 void GameEngine::nextLevel() {
     Screen screen;
+    player->setLevel(player->getLevel()+1);
     if (!currentDungeon) {
         throw GameException("Данж не инициализирован");
     }
@@ -149,5 +152,5 @@ void GameEngine::nextLevel() {
     Screen::drawMessage("ПЕРЕХОД НА УРОВЕНЬ ");
 
     // Создаем новый уровень подземелья
-    currentDungeon = std::make_unique<Dungeon>(currentLevel); // обработка нового уровня (а может ну его?)
+    currentDungeon = std::make_unique<Dungeon>(); // обработка нового уровня (а может ну его?)
 }

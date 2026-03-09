@@ -17,6 +17,7 @@ private:
     std::vector<std::unique_ptr<Item>> inventory;
     int health;
     int damage;
+    int level;
     static constexpr size_t MAX_INVENTORY_SIZE = 8;
     std::pair<int, int> position;
 public:
@@ -36,6 +37,8 @@ public:
     void showInventory() const;
     int getInventorySize() const;
     Item* getItem(size_t itemIndex) const;
+    int getLevel() const;
+    void setLevel(int l);
 };
 
 #endif // PLAYER_H

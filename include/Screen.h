@@ -24,7 +24,7 @@ public:
     /**
      * @brief Отрисовка карты подземелья
      */
-    static void drawDungeonMap(const Dungeon& dungeon, const Player& player);
+    static void drawDungeonMap(const Dungeon& dungeon);
 
     /**
      * @brief Отрисовка информации о текущей комнате

@@ -59,3 +59,12 @@ int Player::getDamage() const {
 void Player::setDamage(int d) {
     damage = d;
 }
+
+int Player::getLevel() const {
+    return level;
+}
+
+void Player::setLevel(int l) {
+    level=l;
+}
+
