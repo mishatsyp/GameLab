@@ -367,7 +367,7 @@ std::string Event::makeChoice(int choice, Player& player) {
                 result += "Ничего не произошло. ";
             }
             break;
-            
+
         default:
             result = "Вы просто стоите в нерешительности. ";
             break;
@@ -391,4 +391,18 @@ std::string Event::makeChoice(int choice, Player& player) {
     }
 
     return result;
+}
+
+/**
+ * @brief Проверка, есть ли монстр в событии
+ */
+bool Event::hasMonster() const {
+    return monster != nullptr;
+}
+
+/**
+ * @brief Получить монстра
+ */
+Monster* Event::getMonster() const {
+    return monster.get();
 }
