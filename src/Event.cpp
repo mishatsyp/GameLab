@@ -1,6 +1,7 @@
 #include "../include/Event.h"
 #include "../include/Player.h"
 #include "../include/Item.h"
+#include "../include/Entity.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -14,16 +15,20 @@ Event::Event() : healthEffect(0), isCompleted(false) {}
  * @param level уровень подземелья (влияет на сложность)
  */
 void Event::generateRandomEvent(int level) {
-    generateRandomText(level);
-
-    // Генерируем случайные последствия для разных выборов
     Random& rng = Random::getInstance();
+
+    // 30% шанс на встречу с монстром
+    if (rng.getBool(0.3)) {
+        generateMonsterEvent(level);
+    } else {
+        generateRandomText(level);
+    }
 
     // Случайное влияние на здоровье (отрицательное или положительное)
     healthEffect = rng.getInt(-15 - level * 2, 10 + level);
 
-    // 30% шанс получить предмет
-    if (rng.getBool(0.3)) {
+    // 30% шанс получить предмет (только для не-монстров)
+    if (!monster && rng.getBool(0.3)) {
         std::vector<std::string> possibleItems = {
             "Зелье здоровья",
             "Меч",
@@ -36,6 +41,53 @@ void Event::generateRandomEvent(int level) {
             itemReward = optItem.value();
         }
     }
+}
+
+/**
+ * @brief Генерация события с монстром
+ */
+void Event::generateMonsterEvent(int level) {
+    Random& rng = Random::getInstance();
+
+    // Создаем монстра
+    monster = std::make_unique<Monster>(Monster::createRandomMonster(level));
+
+    std::vector<std::string> monsterEventTemplates;
+
+    // Шаблоны событий в зависимости от уровня
+    if (level <= 2) {
+        monsterEventTemplates = {
+            "На вас набрасывается " + monster->getName() + "!",
+            "Из темноты выпрыгивает " + monster->getName() + "!",
+            "Вы слышите рычание. Это " + monster->getName() + "!",
+            "Маленький " + monster->getName() + " преграждает путь!"
+        };
+    } else if (level <= 4) {
+        monsterEventTemplates = {
+            "Огромный " + monster->getName() + " преграждает вам путь!",
+            "Вы потревожили логово " + monster->getName() + "а!",
+            "Из тени появляется " + monster->getName() + "!",
+            "Злобный " + monster->getName() + " атакует!"
+        };
+    } else {
+        monsterEventTemplates = {
+            "Древний " + monster->getName() + " пробуждается от сна!",
+            "Перед вами предстает ужасающий " + monster->getName() + "!",
+            "Стены содрогаются от рева " + monster->getName() + "а!",
+            "Легендарный " + monster->getName() + " охраняет проход!"
+        };
+    }
+
+    description = monsterEventTemplates[rng.getInt(0, monsterEventTemplates.size() - 1)];
+
+    // Добавляем информацию о монстре
+    description += "\n\n" + monster->getName() + " имеет " +
+                   std::to_string(monster->getHealth()) + " здоровья.\n";
+    description += "Ваш урон: " + std::to_string(monster->getAttack()) + " | Ваша защита: " +
+                   std::to_string(monster->getDefense());
+
+    // Только два варианта действий для монстров
+    outcomes = {"Вступить в бой", "Попытаться избежать битвы"};
 }
 
 /**
@@ -113,8 +165,98 @@ void Event::generateRandomText(int level) {
         outcomes = outcomeTemplates[eventIndex];
     } else {
         // Запасные варианты
-        outcomes = {"Выбрать вариант 1", "Выбрать вариант 2", "Выбрать вариант 3"};
+        outcomes = {"Выбрать вариант 1", "Выбрать вариант 2"};
     }
+}
+
+/**
+ * @brief Обработка боя с монстром
+ */
+std::string Event::handleBattle(Player& player) {
+    if (!monster) {
+        return "Ошибка: монстр не найден!";
+    }
+
+    std::string result;
+
+    result += "\n═══════════════════════════════════════════════════════════\n";
+    result += "                      БОЙ С МОНСТРОМ!\n";
+    result += "═══════════════════════════════════════════════════════════\n\n";
+    result += "Ваш противник: " + monster->getName() + "\n";
+    result += "Здоровье противника: " + std::to_string(monster->getHealth()) + "\n";
+    result += "Ваш урон: " + std::to_string(player.getDamage()) + "\n\n";
+
+    // Сравниваем урон игрока со здоровьем монстра
+    if (player.getDamage() >= monster->getHealth()) {
+        // Игрок побеждает
+        result += "Вы мощно атакуете и побеждаете " + monster->getName() + "а одним ударом! ️\n";
+        result += "Вы выходите победителем из схватки!\n";
+        // Монстр побежден, ничего не выпадает
+    } else {
+        // Игрок проигрывает
+        int damageTaken = monster->getAttack();
+        player.setHealth(player.getHealth() - damageTaken);
+
+        result += monster->getName() + " оказался слишком сильным!\n";
+        result += "Он наносит вам " + std::to_string(damageTaken) + " урона!\n";
+
+        if (player.getHealth() <= 0) {
+            result += "\nВы погибли в бою...\n";
+            player.setHealth(0);
+        } else {
+            result += "У вас осталось " + std::to_string(player.getHealth()) + " здоровья.\n";
+            result += "Вы едва смогли убежать, оставляя монстра позади.\n";
+        }
+    }
+
+    result += "\n═══════════════════════════════════════════════════════════\n";
+
+    return result;
+}
+
+/**
+ * @brief Попытка избежать битвы
+ */
+std::string Event::avoidBattle(Player& player) {
+    if (!monster) {
+        return "Ошибка: монстр не найден!";
+    }
+
+    Random& rng = Random::getInstance();
+    std::string result;
+
+    result += "\n═══════════════════════════════════════════════════════════\n";
+    result += "                 ПОПЫТКА ИЗБЕЖАТЬ БИТВЫ\n";
+    result += "═══════════════════════════════════════════════════════════\n\n";
+
+    // 50% шанс успешно избежать битвы
+    if (rng.getBool(0.5)) {
+        result += "Вам удалось незаметно проскочить мимо " + monster->getName() + "а!\n";
+        result += "Монстр вас не заметил.\n";
+    } else {
+        result += "Монстр заметил вас и атаковал!\n";
+
+        // Монстр наносит урон, но меньше обычного
+        int damageTaken = monster->getAttack() / 2;
+        if (damageTaken < 1) damageTaken = 1;
+
+        player.setHealth(player.getHealth() - damageTaken);
+
+        result += monster->getName() + " успел задеть вас, нанеся " +
+                  std::to_string(damageTaken) + " урона!\n";
+
+        if (player.getHealth() <= 0) {
+            result += "\nВы погибли при попытке убежать...\n";
+            player.setHealth(0);
+        } else {
+            result += "У вас осталось " + std::to_string(player.getHealth()) + " здоровья.\n";
+            result += "Вам удалось вырваться и убежать.\n";
+        }
+    }
+
+    result += "\n═══════════════════════════════════════════════════════════\n";
+
+    return result;
 }
 
 /**
@@ -162,7 +304,7 @@ void Event::applyEffects(Player& player, int choiceHealth, const std::string& ch
 
 /**
  * @brief Выбор варианта действия
- * @param choice номер выбранного варианта (0, 1 или 2)
+ * @param choice номер выбранного варианта (0, 1)
  * @param player ссылка на игрока
  * @return текст результата выбора
  */
@@ -175,6 +317,21 @@ std::string Event::makeChoice(int choice, Player& player) {
         return "Это событие уже завершено.";
     }
 
+    // Если это событие с монстром
+    if (monster) {
+        std::string result;
+
+        if (choice == 0) { // Вступить в бой
+            result = handleBattle(player);
+        } else { // Избежать битвы
+            result = avoidBattle(player);
+        }
+
+        isCompleted = true;
+        return result;
+    }
+
+    // Обычное событие (без монстра)
     Random& rng = Random::getInstance();
     std::string result;
     int choiceHealth = 0;
@@ -182,7 +339,7 @@ std::string Event::makeChoice(int choice, Player& player) {
 
     // Генерируем результат в зависимости от выбора
     switch (choice) {
-        case 0: // Первый вариант - обычно осторожный/исследовательский
+        case 0: // Первый вариант
             result = "Вы решили " + outcomes[0] + ". ";
             if (rng.getBool(0.6)) {
                 // Хороший исход
@@ -198,7 +355,7 @@ std::string Event::makeChoice(int choice, Player& player) {
             }
             break;
 
-        case 1: // Второй вариант - нейтральный
+        case 1: // Второй вариант
             result = "Вы решили " + outcomes[1] + ". ";
             if (rng.getBool(0.5)) {
                 choiceHealth = rng.getInt(-5, 10);
