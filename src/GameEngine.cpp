@@ -43,9 +43,32 @@ bool GameEngine::initialize() {
             std::cin >> choice;
             Screen::clearScreen();
             switch (choice) {
-                case 1:
-                    ///???
+                case 1: {
+                    // Получаем текущие координаты
+                    int x = currentDungeon->getCurrentX();
+                    int y = currentDungeon->getCurrentY();
+
+                    // Получаем комнату по координатам
+                    Room* currentRoom = currentDungeon->getRoomAt(x, y);
+
+                    if (currentRoom) {
+                        // Выводим описание комнаты
+                        std::cout << "\n" << currentRoom->look() << std::endl;
+
+                        // Если комната с монстром (значение 2 в матрице) и не исследована - бой
+                        if (currentRoom->getType() == Room::RoomType::MONSTER) {
+                            if (!currentRoom->getisExplored()) {
+                                std::cout << "\n⚔️ Монстр атакует! Начинается бой! ⚔️" << std::endl;
+                                handleBattle();
+                            }
+                        }
+                        // Если комната с ивентом - он обработается при входе/осмотре
+                        // В методе look уже есть логика с описанием события
+                    } else {
+                        std::cout << "Ошибка: не удалось получить текущую комнату!" << std::endl;
+                    }
                     break;
+                }
 
                 case 2:
                     player->showInventory();

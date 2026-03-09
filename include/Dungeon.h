@@ -43,6 +43,10 @@ public:
     int getCurrentY() const { return currentRoomIndex.second; }
     int getCell(int x, int y) const;  // получить значение в клетке
     size_t getRoomCount() const;
+
+    void generateRooms(); // Создает комнаты на основе матрицы
+    Room* getRoomAt(int x, int y); // Получить комнату по координатам
+    const Room* getRoomAt(int x, int y) const;
 };
 
 #endif // DUNGEON_H

@@ -8,12 +8,13 @@
 #include "Event.h"
 
 class Room {
-private:
+public:
     enum class RoomType {
         EMPTY,      // Пустая комната (только осмотреться)
         EVENT,      // Комната с событием
         MONSTER     // Выход на следующий уровень
     };
+private:
     std::pair<int,int> coordinates;
     RoomType type;
     bool isExplored;           // Были ли уже в этой комнате
@@ -29,6 +30,8 @@ public:
     RoomType getType() const { return type; }
     bool getisExplored() const {return isExplored;}
     //Event* getEvent() const { return roomEvent.get(); }
+    std::pair<int,int> getCoordinates() const {return coordinates;}
+    void setCoordinates(int x, int y) { coordinates = {x, y}; }
 };
 
 #endif // ROOM_H
