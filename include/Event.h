@@ -6,7 +6,6 @@
 #include <vector>
 #include <memory>
 #include "Player.h"
-#include "Random.h"
 
 /**
  * @brief Класс события - просто текстовое событие с последствиями
@@ -18,6 +17,7 @@ private:
     int healthEffect;             // Влияние на здоровье (может быть отрицательным)
     std::string itemReward;       // Предмет, который можно получить (если есть)
     bool isCompleted;             // Завершено ли событие
+    std::unique_ptr<Monster> monster;
 public:
     Event();
     /**
@@ -52,6 +52,7 @@ private:
      * @brief Применение последствий к игроку
      */
     void applyEffects(Player& player, int choiceHealth, const std::string& choiceItem);
+    void generateMonsterEvent(int level);
 };
 
 #endif // EVENT_H

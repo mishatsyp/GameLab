@@ -25,7 +25,7 @@ public:
     Room(Room&&) noexcept = default; // Разрешаем перемещение
     Room& operator=(Room&&) noexcept = default;
     void generateRoomContent();
-    std::string look() const{}
+    std::string look() const;
     RoomType getType() const { return type; }
     bool getisExplored() const {return isExplored;}
     //Event* getEvent() const { return roomEvent.get(); }

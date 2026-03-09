@@ -27,7 +27,7 @@ void Monster::takeDamage(int amount) {
     }
 }
 
-void Monster::monsterAttack(Entity& target) {
+void Monster::monsterAttack(Entity& target) { // А ЗАЧЕМ, ЕСЛИ БОЕВКА НА СРАВНЕНИИ СТАТ
     Random& rng = Random::getInstance();
     int damageVariation = rng.getInt(80, 120);
     int finalDamage = (attack * damageVariation) / 100;

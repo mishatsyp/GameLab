@@ -78,12 +78,12 @@ void Event::generateMonsterEvent(int level) {
         };
     }
 
-    description = monsterEventTemplates[rng.getInt(0, monsterEventTemplates.size() - 1)];
+    description = monsterEventTemplates[rng.getInt(0, static_cast<int>(monsterEventTemplates.size()) - 1)];
 
     // Добавляем информацию о монстре
     description += "\n\n" + monster->getName() + " имеет " +
                    std::to_string(monster->getHealth()) + " здоровья.\n";
-    description += "Ваш урон: " + std::to_string(monster->getAttack()) + " | Ваша защита: " +
+    description += "Ваш урон: " + std::to_string(monster->getAttack()) + " | Ваша защита: " + // !!!!!!!!!!!!!!!!!!!!!!!!!!
                    std::to_string(monster->getDefense());
 
     // Только два варианта действий для монстров

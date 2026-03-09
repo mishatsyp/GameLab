@@ -86,7 +86,7 @@ Dungeon::Dungeon() {
     
     // Выбираем рандомный паттерн
     Random& rng = Random::getInstance();
-    int patternIndex = rng.getInt(0, patterns.size() - 1);
+    int patternIndex = rng.getInt(0, static_cast<int>(patterns.size()) - 1);
     
     matrix = patterns[patternIndex].layout;
     currentRoomIndex = patterns[patternIndex].startPos;
