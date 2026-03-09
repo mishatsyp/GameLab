@@ -11,6 +11,7 @@ class Dungeon {
 private:
     std::vector<std::vector<int>> matrix;  // матрица подземелья
     std::pair<int, int> currentRoomIndex;  // позиция игрока (x, y)
+    std::vector<Room> rooms_;
 
     // Паттерн + его стартовые координаты
     struct PatternData {
