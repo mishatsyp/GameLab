@@ -5,7 +5,9 @@
 #include <memory>
 #include <optional>
 #include <string>
-#include "Event.h"
+
+class Event;
+class Player;
 
 class Room {
 public:
@@ -20,12 +22,12 @@ private:
     bool isExplored;           // Были ли уже в этой комнате
     std::unique_ptr<Event> roomEvent; // Событие в комнате (если тип EVENT)
 public:
-    Room(RoomType roomType); // Запрещаем копирование (из-за unique_ptr)
+    Room(RoomType roomType, Player player); // Запрещаем копирование (из-за unique_ptr)
     Room(const Room&) = delete;
     Room& operator=(const Room&) = delete;
     Room(Room&&) noexcept = default; // Разрешаем перемещение
     Room& operator=(Room&&) noexcept = default;
-    void generateRoomContent();
+    void generateRoomContent(Player& player);
     std::string look() const;
     RoomType getType() const { return type; }
     bool getisExplored() const {return isExplored;}

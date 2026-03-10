@@ -4,11 +4,11 @@
 #include "../include/Screen.h"
 #include <iostream>
 
-Room::Room(RoomType roomType) : type(roomType), isExplored(false) {
-    generateRoomContent();
+Room::Room(RoomType roomType, Player p) : type(roomType), isExplored(false) {
+    generateRoomContent(p);
 }
 
-void Room::generateRoomContent() {
+void Room::generateRoomContent(Player& p) {
     Random& rng = Random::getInstance();
 
     // Если комната с монстром - ничего не генерируем (будет бой)
@@ -28,7 +28,7 @@ void Room::generateRoomContent() {
     // Если комната с ивентом - создаем событие
     if (type == RoomType::EVENT) {
         roomEvent = std::make_unique<Event>();
-        roomEvent->generateRandomEvent(1); // уровень 1 по умолчанию
+        roomEvent->generateRandomEvent(1, p); // уровень 1 по умолчанию
     }
 }
 
