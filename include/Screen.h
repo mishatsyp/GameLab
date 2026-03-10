@@ -7,6 +7,7 @@
 #include <vector>
 #include "GameEngine.h"
 #include "Player.h"
+#include "Dungeon.h"
 
 class Screen {
 public:
@@ -49,7 +50,7 @@ public:
     /**
      * @brief Отрисовка боя
      */
-    static void drawBattle(const Player& player, const Monster& monster);
+    //static void drawBattle(const Player& player, const Monster& monster);
 
     static int chooseAction();
 
@@ -57,7 +58,7 @@ private:
     /**
      * @brief Получение символа комнаты по её типу
      */
-    static char getRoomSymbol(const Room& room, bool isCurrent, bool isVisited);
+    //static char getRoomSymbol(const Room& room, bool isCurrent, bool isVisited);
 };
 
 #endif // SCREEN_H

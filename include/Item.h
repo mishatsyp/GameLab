@@ -3,7 +3,6 @@
 
 #include <string>
 #include <memory>
-#include "Item.h"
 #include <iostream>
 #include "Player.h"
 
@@ -57,7 +56,7 @@ public:
     virtual std::string getStats() const override; //возвращает урон меча
     // virtual std::string getItemType() const override;//тип пред
     // virtual std::unique_ptr<Item> clone() const override;
-    bool isBroken() const{};
+    // bool isBroken() const {if };
     void reduceDurability(int amount = 5);
     int getDamage() const { return damage; }
     int getItemDurability() const override;

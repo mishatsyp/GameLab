@@ -14,7 +14,6 @@ add_executable(GameLab main.cpp
         src/Random.cpp
         include/Entity.h
         src/Entity.cpp
-        include/Item.h
         src/Item.cpp
         include/Event.h
         src/Event.cpp
