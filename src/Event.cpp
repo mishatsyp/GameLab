@@ -14,12 +14,12 @@ Event::Event() : healthEffect(0), isCompleted(false) {}
  * @brief Генерация случайного события
  * @param level уровень подземелья (влияет на сложность)
  */
-void Event::generateRandomEvent(int level) {
+void Event::generateRandomEvent(int level, Player& p) {
     Random& rng = Random::getInstance();
 
     // 30% шанс на встречу с монстром
     if (rng.getBool(0.3)) {
-        generateMonsterEvent(level);
+        generateMonsterEvent(level, p);
     } else {
         generateRandomText(level);
     }
@@ -46,7 +46,7 @@ void Event::generateRandomEvent(int level) {
 /**
  * @brief Генерация события с монстром
  */
-void Event::generateMonsterEvent(int level) {
+void Event::generateMonsterEvent(int level, Player& p) {
     Random& rng = Random::getInstance();
 
     // Создаем монстра
@@ -83,8 +83,8 @@ void Event::generateMonsterEvent(int level) {
     // Добавляем информацию о монстре
     description += "\n\n" + monster->getName() + " имеет " +
                    std::to_string(monster->getHealth()) + " здоровья.\n";
-    description += "Ваш урон: " + std::to_string(monster->getAttack()) + " | Ваша защита: " + // !!!!!!!!!!!!!!!!!!!!!!!!!!
-                   std::to_string(monster->getDefense());
+    description += "Ваш урон: " + std::to_string(p.getDamage()); // + " | Ваша защита: " + // !!!!!!!!!!!!!!!!!!!!!!!!!!
+                 //  std::to_string(monster->getDefense());
 
     // Только два варианта действий для монстров
     outcomes = {"Вступить в бой", "Попытаться избежать битвы"};
@@ -194,7 +194,7 @@ std::string Event::handleBattle(Player& player) {
         // Монстр побежден, ничего не выпадает
     } else {
         // Игрок проигрывает
-        int damageTaken = monster->getAttack();
+        int damageTaken = player.getDamage();
         player.setHealth(player.getHealth() - damageTaken);
 
         result += monster->getName() + " оказался слишком сильным!\n";
@@ -237,7 +237,7 @@ std::string Event::avoidBattle(Player& player) {
         result += "Монстр заметил вас и атаковал!\n";
 
         // Монстр наносит урон, но меньше обычного
-        int damageTaken = monster->getAttack() / 2;
+        int damageTaken = player.getDamage() / 2;
         if (damageTaken < 1) damageTaken = 1;
 
         player.setHealth(player.getHealth() - damageTaken);

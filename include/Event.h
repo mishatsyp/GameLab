@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include "Entity.h"
 #include "Player.h"
 
 /**
@@ -24,7 +25,7 @@ public:
      * @brief Генерация случайного события
      * @param level уровень подземелья (влияет на сложность)
      */
-    void generateRandomEvent(int level);
+    void generateRandomEvent(int level, Player& p);
     /**
      * @brief Запуск события
      * @param player ссылка на игрока
@@ -41,6 +42,10 @@ public:
     std::string getDescription() const { return description; }
     const std::vector<std::string>& getOutcomes() const { return outcomes; }
     bool getIsCompleted() const { return isCompleted; }
+    std::string handleBattle(Player& player);
+    std::string avoidBattle(Player& player);
+    bool hasMonster() const;
+    Monster* getMonster() const;
 
 private:
     /**
@@ -52,7 +57,7 @@ private:
      * @brief Применение последствий к игроку
      */
     void applyEffects(Player& player, int choiceHealth, const std::string& choiceItem);
-    void generateMonsterEvent(int level);
+    void generateMonsterEvent(int level, Player& p);
 };
 
 #endif // EVENT_H
