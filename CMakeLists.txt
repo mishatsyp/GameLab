@@ -16,8 +16,6 @@ add_executable(GameLab main.cpp
         src/Entity.cpp
         include/Item.h
         src/Item.cpp
-        include/Dungeon.h
-        src/Dungeon.cpp
         include/Event.h
         src/Event.cpp
         include/Room.h

@@ -1,5 +1,5 @@
 #include "../include/Dungeon.h"
-Dungeon::Dungeon() {
+Dungeon::Dungeon(Player& p) {
     // Инициализируем паттерны прямо здесь
     patterns = {
         // Паттерн 1: Змейка (старт в 1)
@@ -93,7 +93,7 @@ Dungeon::Dungeon() {
     currentRoomIndex = patterns[patternIndex].startPos;
 
     // Генерируем комнаты на основе матрицы
-    generateRooms();
+    generateRooms(p);
 }
 
 void Dungeon::moveRight() {
@@ -130,7 +130,7 @@ size_t Dungeon::getRoomCount() const {
     return count;
 }
 
-void Dungeon::generateRooms() {
+void Dungeon::generateRooms(Player& p) {
     rooms_.clear();
 
     // Проходим по всей матрице и создаем комнаты
@@ -152,7 +152,7 @@ void Dungeon::generateRooms() {
                 }
 
                 // Создаем комнату
-                Room room(type);
+                Room room(type, p);
                 room.setCoordinates(static_cast<int>(x), static_cast<int>(y));
                 rooms_.push_back(std::move(room));
             }

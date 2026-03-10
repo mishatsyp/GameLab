@@ -4,9 +4,9 @@
 #include <vector>
 #include <memory>
 #include <utility>
-#include "Room.h"
 #include "Random.h"
-
+#include "Player.h"
+#include "Room.h"
 class Dungeon {
 private:
     std::vector<std::vector<int>> matrix;  // матрица подземелья
@@ -25,7 +25,7 @@ private:
     static constexpr int MAX_ROOMS = 10;
 
 public:
-    explicit Dungeon();  // конструктор сразу выбирает рандомный паттерн
+    explicit Dungeon(Player& p);  // конструктор сразу выбирает рандомный паттерн
 
     Dungeon(const Dungeon&) = delete;
     Dungeon& operator=(const Dungeon&) = delete;
@@ -44,7 +44,7 @@ public:
     int getCell(int x, int y) const;  // получить значение в клетке
     size_t getRoomCount() const;
 
-    void generateRooms(); // Создает комнаты на основе матрицы
+    void generateRooms(Player& player); // Создает комнаты на основе матрицы
     Room* getRoomAt(int x, int y); // Получить комнату по координатам
     const Room* getRoomAt(int x, int y) const;
 };
