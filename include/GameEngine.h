@@ -10,6 +10,7 @@
 #include "Dungeon.h"
 #include "Screen.h"
 
+class Dungeon;
 /**
  * @brief Центральный класс движка игры
  */

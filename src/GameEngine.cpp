@@ -28,14 +28,14 @@ bool GameEngine::initialize() {
         player = std::make_unique<Player>(playerName);
 
         // Создаем первый уровень подземелья
-        currentDungeon = std::make_unique<Dungeon>();
+        currentDungeon = std::make_unique<Dungeon>(*player);
 
         isRunning = true;
 
         // Вызываем меню из Screen
         menu();
 
-        Screen::drawDungeonMap(currentDungeon); // может в цикл?
+        Screen::drawDungeonMap(*currentDungeon); // может в цикл?
 
         while (player->getHealth() > 0 || player->getLevel()<=5) {
             int choice;
@@ -124,7 +124,7 @@ bool GameEngine::initialize() {
 
                     // Спрашиваем у игрока направление движения
                     char direction;
-                    Screen::drawDungeonMap();
+                    Screen::drawDungeonMap(*currentDungeon);
                     Screen::drawMessage("Куда хотите пойти? (w - вверх, s - вниз, a - влево, d - вправо): ");
                     std::cin >> direction;
 
@@ -194,7 +194,7 @@ bool GameEngine::initialize() {
 }
 
 void GameEngine::handleCurrentRoom() {
-    Screen::drawCurrentRoomInfo(currentDungeon);
+    Screen::drawCurrentRoomInfo(*currentDungeon);
 }
 
 void GameEngine::handleBattle() {
@@ -213,5 +213,5 @@ void GameEngine::nextLevel() {
     Screen::drawMessage("ПЕРЕХОД НА УРОВЕНЬ ");
 
     // Создаем новый уровень подземелья
-    currentDungeon = std::make_unique<Dungeon>(); // обработка нового уровня (а может ну его?)
+    currentDungeon = std::make_unique<Dungeon>(*player); // обработка нового уровня (а может ну его?)
 }

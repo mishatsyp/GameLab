@@ -8,7 +8,6 @@
 #include "Entity.h"
 #include "Item.h"
 #include "Screen.h"
-
 class Player {
 private:
     std::string name;
@@ -24,6 +23,10 @@ public:
     explicit Player(const std::string& playerName);
     // virtual ~Player() override = default; <- incorrect
     ~Player() = default;
+    Player(const Player&) = delete;
+    Player& operator=(const Player&) = delete;
+    Player(Player&&) = default;
+    Player& operator=(Player&&) = default;
 
     // Реализация виртуальных методов
     void attack(Entity& target); // deleted virtual, override
