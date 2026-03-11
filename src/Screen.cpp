@@ -11,7 +11,7 @@
     // static constexpr char PLAYER_SYMBOL = '@';
 
     void Screen::clearScreen() {
-        std::cout << "\033[2J\033[1;1H";  //очищает консоль
+       system("clear");
     }
     static void drawDungeonMap(const Dungeon& dungeon, const Player& player){} //Отрисовка карты подземелья
     static void drawCurrentRoomInfo(const Dungeon& dungeon); //Отрисовка информации о текущей комнате
@@ -81,9 +81,7 @@
         } else {
             std::cout << "Инвентарь пуст. Найдите предметы в подземелье!\n";
         }
-
         std::cout << "\n──────────────────────────────────────────────────\n";
-        std::cout << "Использовать: u [номер]  |  Назад: b\n";
     };
 
 
@@ -106,10 +104,6 @@ void Screen::drawMessage(const std::string& message) {
     if (!msg.empty()) {
         std::cout << "  " << msg << "\n";
     }
-
-    std::cout << "\n──────────────────────────────────────────────────\n";
-    std::cout << "  Нажмите Enter чтобы продолжить...";
-    std::cin.get();
 }
 
     /**
