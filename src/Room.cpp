@@ -33,43 +33,45 @@ void Room::generateRoomContent(Player& p) {
     }
 }
 
-std::string Room::look() const {
+void Room::look() const {
     std::string result;
 
     // В зависимости от типа комнаты
     switch(type) {
         case RoomType::EMPTY:
             if (isExplored) {
-                result = "Вы снова в пустой комнате. Ничего не изменилось.";
+                Screen::drawMessage("Вы снова в пустой комнате. Ничего не изменилось.");
             } else {
-                result = "Пустая комната. Здесь ничего нет.";
+                Screen::drawMessage("Пустая комната. Здесь ничего нет.");
             }
             break;
 
         case RoomType::EVENT:
             if (isExplored) {
                 if (roomEvent && !roomEvent->getIsCompleted()) {
-                    result = "Событие все еще активно.";
+                    Screen::drawMessage("Событие все еще активно.");
                 } else {
-                    result = "Вы уже прошли это событие. В комнате ничего не изменилось.";
+                    Screen::drawMessage("Вы уже прошли это событие. В комнате ничего не изменилось.");
                 }
             } else {
                 if (roomEvent) {
-                    result = roomEvent->getDescription();
+                    Screen::drawMessage(roomEvent->getDescription());
+                    // Screen::drawMessage(roomEvent->getOutcomes());
+                    for (auto& x : roomEvent->getOutcomes()) {
+                        Screen::drawMessage(x);
+                    }
                 } else {
-                    result = "Странная комната...";
+                    Screen::drawMessage("Странная комната...");
                 }
             }
             break;
 
         case RoomType::MONSTER:
             if (isExplored) {
-                result = "Вы снова в комнате с монстром.";
+                Screen::drawMessage("Вы снова в комнате с монстром.");
             } else {
-                result = "В комнате монстр! Приготовьтесь к бою!";
+                Screen::drawMessage("В комнате монстр! Приготовьтесь к бою!");
             }
             break;
     }
-
-    return result;
 }
