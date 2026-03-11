@@ -19,4 +19,5 @@ add_executable(GameLab main.cpp
         src/Event.cpp
         include/Room.h
         src/Room.cpp
+        src/Dungeon.cpp
 )

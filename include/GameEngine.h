@@ -1,14 +1,18 @@
 #ifndef GAME_ENGINE_H
 #define GAME_ENGINE_H
 
+#pragma once
 #include <memory>
 #include <optional>
 #include <chrono>
 #include <vector>
 #include <functional>
-#include "Player.h"
-#include "Dungeon.h"
+// #include "Player.h"
+// #include "Dungeon.h"
 #include "Screen.h"
+
+class Player;
+class Dungeon;
 
 class Dungeon;
 /**
@@ -28,7 +32,7 @@ private:
     
 public:
     GameEngine();
-    ~GameEngine() = default;
+    ~GameEngine();
     
     // Запрещаем копирование
     GameEngine(const GameEngine&) = delete;
@@ -51,15 +55,15 @@ public:
     //  */
     // std::optional<char> processInput();
 
-    /**
-     * @brief Обработка текущей комнаты
-     */
-    void handleCurrentRoom(); // добавить аргумент dungeon?
-    
+    // /**
+    //  * @brief Обработка текущей комнаты
+    //  */
+    // void handleCurrentRoom(); // добавить аргумент dungeon?
+
     /**
      * @brief Обработка боя
      */
-    void handleBattle();
+    // void handleBattle(Player& p);
     
     /**
      * @brief Переход на следующий уровень подземелья

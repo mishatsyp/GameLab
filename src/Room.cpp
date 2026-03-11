@@ -2,9 +2,10 @@
 #include "../include/Room.h"
 #include "../include/Random.h"
 #include "../include/Screen.h"
+#include "../include/Event.h"
 #include <iostream>
 
-Room::Room(RoomType roomType, Player p) : type(roomType), isExplored(false) {
+Room::Room(RoomType roomType, Player& p) : type(roomType), isExplored(false) {
     generateRoomContent(p);
 }
 

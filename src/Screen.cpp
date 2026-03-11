@@ -1,4 +1,7 @@
 #include "../include/Screen.h"
+#include "../include/Item.h"
+#include "../include/Player.h"
+#include "../include/Dungeon.h"
 
 
     // Символы для отрисовки комнат - constexpr
@@ -152,10 +155,6 @@ int Screen::chooseAction() {
 
     std::cout << "──────────────────────────────────────────────────\n";
     std::cout << "  Введите номер действия (1-3): ";
-
-    int choice;
-    std::cin >> choice;
-    return choice;
 }
 
     /**
@@ -217,3 +216,4 @@ void Screen::drawDungeonMap(const Dungeon& dungeon) {
     std::cout << "  ☐ - комната    ➡ - выход    👤 - вы здесь\n";
     std::cout << "──────────────────────────────────────────────────\n";
 }
+

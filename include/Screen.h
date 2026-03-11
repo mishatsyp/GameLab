@@ -1,13 +1,16 @@
 // Screen.h
-    #ifndef SCREEN_H
+#ifndef SCREEN_H
 #define SCREEN_H
 
+#pragma once
 #include <iostream>
 #include <string>
 #include <vector>
-#include "GameEngine.h"
-#include "Player.h"
-#include "Dungeon.h"
+// #include "Player.h"
+// #include "Dungeon.h"
+
+class Player;
+class  Dungeon;
 
 class Screen {
 public:

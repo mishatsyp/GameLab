@@ -1,5 +1,6 @@
 #ifndef DUNGEON_H
 #define DUNGEON_H
+#pragma once
 #include <iostream>
 #include <vector>
 #include <memory>
@@ -7,6 +8,8 @@
 #include "Random.h"
 #include "Player.h"
 #include "Room.h"
+#include "Event.h"
+
 class Dungeon {
 private:
     std::vector<std::vector<int>> matrix;  // матрица подземелья

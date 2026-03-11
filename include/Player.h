@@ -1,13 +1,17 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#pragma once
 #include <string>
 #include <vector>
 #include <memory>
 #include <optional>
 #include "Entity.h"
-#include "Item.h"
-#include "Screen.h"
+//#include "Item.h"
+// #include "Screen.h"
+
+class Item;
+
 class Player {
 private:
     std::string name;

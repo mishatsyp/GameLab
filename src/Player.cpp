@@ -1,4 +1,6 @@
 #include "../include/Player.h"
+#include "../include/Item.h"      // <-- ЭТО ДОБАВИТЬ!
+#include "../include/Screen.h"
 
 Player::Player(const std::string& playerName)
     : name( playerName ), inBattle( false ),
@@ -27,8 +29,7 @@ bool Player::useItem(const size_t itemIndex) {
 }
 
 void Player::showInventory() const {
-    Screen screen;
-    // screen.drawPlayerInventory(); ???
+    Screen::drawInventory(*this);
 }
 
 int Player::getInventorySize() const {

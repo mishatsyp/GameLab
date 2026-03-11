@@ -1,5 +1,11 @@
 #include "../include/Dungeon.h"
 #include "../include/Player.h"
+#include "../include/Item.h"
+#include "../include/Player.h"
+#include "../include/GameEngine.h"
+#include "../include/Dungeon.h"
+
+GameEngine::~GameEngine() {}
 
 GameEngine::GameEngine()
     : isRunning(false)
@@ -34,8 +40,11 @@ bool GameEngine::initialize() {
 
         // Вызываем меню из Screen
         menu();
-
-        Screen::drawDungeonMap(*currentDungeon); // может в цикл?
+        int des;
+        std::cin>>des;
+        if (des==2){return false;}
+        else {
+            Screen::clearScreen();
 
         while (player->getHealth() > 0 || player->getLevel()<=5) {
             int choice;
@@ -59,7 +68,7 @@ bool GameEngine::initialize() {
                         if (currentRoom->getType() == Room::RoomType::MONSTER) {
                             if (!currentRoom->getisExplored()) {
                                 std::cout << "\n⚔️ Монстр атакует! Начинается бой! ⚔️" << std::endl;
-                                handleBattle();
+                              //  Room::GetEvent(currentLevel).handleBattle(*player);
                             }
                         }
                         // Если комната с ивентом - он обработается при входе/осмотре
@@ -185,7 +194,7 @@ bool GameEngine::initialize() {
                     std::cout << "Choose another option";
             }
         }
-
+        }
         return true;
     } catch (const std::exception& e) {
         std::cerr << "Ошибка инициализации: " << e.what() << std::endl;
@@ -193,14 +202,13 @@ bool GameEngine::initialize() {
     }
 }
 
-void GameEngine::handleCurrentRoom() {
-    Screen::drawCurrentRoomInfo(*currentDungeon);
-}
+// void GameEngine::handleCurrentRoom() {
+//     Screen::drawCurrentRoomInfo(*currentDungeon);
+// }
 
-void GameEngine::handleBattle() {
-    Screen screen;
-    // screen.drawBattle(player, ...); нужен monster
-}
+// void GameEngine::handleBattle(Player& p) {
+//     .handleBattle(p);
+// }
 
 void GameEngine::nextLevel() {
     Screen screen;

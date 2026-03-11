@@ -2,11 +2,14 @@
 #ifndef EVENT_H
 #define EVENT_H
 
+#pragma once
 #include <string>
 #include <vector>
 #include <memory>
 #include "Entity.h"
 #include "Player.h"
+#include <memory>
+#include "Random.h"
 
 /**
  * @brief Класс события - просто текстовое событие с последствиями

@@ -3,6 +3,6 @@
 #include "include/GameEngine.h"
 
 int main() {
-    GameEngine GayEngine;
-    GayEngine.initialize();
+    GameEngine game_engine;
+    game_engine.initialize();
 }
