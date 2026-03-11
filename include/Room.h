@@ -29,13 +29,13 @@ public:
     Room(Room&&) noexcept = default; // Разрешаем перемещение
     Room& operator=(Room&&) noexcept = default;
     void generateRoomContent(Player& player);
-    void look() const;
+    std::string look() const;
     RoomType getType() const { return type; }
     bool getisExplored() const {return isExplored;}
     //Event* getEvent() const { return roomEvent.get(); }
     std::pair<int,int> getCoordinates() const {return coordinates;}
     void setCoordinates(int x, int y) { coordinates = {x, y}; }
-    Event* GetEvent() const { return roomEvent.get();}
+    const Event* GetEvent() const { return roomEvent.get();}
 };
 
 #endif // ROOM_H

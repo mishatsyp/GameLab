@@ -33,45 +33,43 @@ void Room::generateRoomContent(Player& p) {
     }
 }
 
-void Room::look() const {
+std::string Room::look() const {
     std::string result;
 
     // В зависимости от типа комнаты
     switch(type) {
         case RoomType::EMPTY:
             if (isExplored) {
-                Screen::drawMessage("Вы снова в пустой комнате. Ничего не изменилось.");
+                result = "Вы снова в пустой комнате. Ничего не изменилось.";
             } else {
-                Screen::drawMessage("Пустая комната. Здесь ничего нет.");
+                result = "Пустая комната. Здесь ничего нет.";
             }
             break;
 
         case RoomType::EVENT:
             if (isExplored) {
                 if (roomEvent && !roomEvent->getIsCompleted()) {
-                    Screen::drawMessage("Событие все еще активно.");
+                    result = "Событие все еще активно.";
                 } else {
-                    Screen::drawMessage("Вы уже прошли это событие. В комнате ничего не изменилось.");
+                    result = "Вы уже прошли это событие. В комнате ничего не изменилось.";
                 }
             } else {
                 if (roomEvent) {
-                    Screen::drawMessage(roomEvent->getDescription());
-                    // Screen::drawMessage(roomEvent->getOutcomes());
-                    for (auto& x : roomEvent->getOutcomes()) {
-                        Screen::drawMessage(x);
-                    }
+                    result = roomEvent->getDescription();
                 } else {
-                    Screen::drawMessage("Странная комната...");
+                    result = "Странная комната...";
                 }
             }
             break;
 
         case RoomType::MONSTER:
             if (isExplored) {
-                Screen::drawMessage("Вы снова в комнате с монстром.");
+                result = "Вы снова в комнате с монстром.";
             } else {
-                Screen::drawMessage("В комнате монстр! Приготовьтесь к бою!");
+                result = "В комнате монстр! Приготовьтесь к бою!";
             }
             break;
     }
+
+    return result;
 }
