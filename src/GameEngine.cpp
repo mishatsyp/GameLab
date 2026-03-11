@@ -61,18 +61,24 @@ bool GameEngine::initialize() {
                     Room* currentRoom = currentDungeon->getRoomAt(x, y);
 
                     if (currentRoom) {
-                        // Выводим описание комнаты
-                        std::cout << "\n" << currentRoom->look() << std::endl;
+                        currentRoom->look();
+
 
                         // Если комната с монстром (значение 2 в матрице) и не исследована - бой
                         if (currentRoom->getType() == Room::RoomType::MONSTER) {
                             if (!currentRoom->getisExplored()) {
                                 std::cout << "\n⚔️ Монстр атакует! Начинается бой! ⚔️" << std::endl;
-                              //  Room::GetEvent(currentLevel).handleBattle(*player);
+                                 currentRoom->GetEvent()->handleBattle(*player);
                             }
+
                         }
-                        // Если комната с ивентом - он обработается при входе/осмотре
-                        // В методе look уже есть логика с описанием события
+                        if (currentRoom->getType() == Room::RoomType::EVENT) {
+                             if (!currentRoom->getisExplored()) {
+                                 int ch;
+                                 std::cin >> ch;
+                                Screen::drawMessage(currentRoom->GetEvent()->makeChoice(ch, *player));
+                             }
+                         }
                     } else {
                         std::cout << "Ошибка: не удалось получить текущую комнату!" << std::endl;
                     }
