@@ -2,6 +2,7 @@
 #include "../include/Player.h"
 #include "../include/Item.h"
 #include "../include/Entity.h"
+#include "../include/Screen.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -374,7 +375,7 @@ std::string Event::makeChoice(int choice, Player& player) {
     }
 
     // Применяем эффекты
-    applyEffects(player, choiceHealth, choiceItem);
+    //applyEffects(player, choiceHealth, choiceItem);
 
     // Отмечаем событие как завершенное
     isCompleted = true;
