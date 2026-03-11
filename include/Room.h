@@ -15,7 +15,8 @@ public:
     enum class RoomType {
         EMPTY,      // Пустая комната (только осмотреться)
         EVENT,      // Комната с событием
-        MONSTER     // Выход на следующий уровень
+        MONSTER,
+        EXIT// Выход на следующий уровень
     };
 private:
     std::pair<int,int> coordinates;

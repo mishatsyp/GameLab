@@ -35,6 +35,9 @@ void Room::generateRoomContent(Player& p) {
 
 void Room::look() const {
     std::string result;
+    // if (isCompleted != true) {
+    //     player.setCheckedRooms(player.getCheckedRooms()+1); // !!!!!!!!!!!!!!!!!!!!!!!!!
+    // }
 
     // В зависимости от типа комнаты
     switch(type) {
@@ -72,6 +75,10 @@ void Room::look() const {
             } else {
                 Screen::drawMessage("В комнате монстр! Приготовьтесь к бою!");
             }
+            break;
+
+        case RoomType::EXIT:
+            Screen::drawMessage("Вы нашли выход на следующий уровень!");
             break;
     }
 }

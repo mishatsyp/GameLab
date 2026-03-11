@@ -143,7 +143,7 @@ void Dungeon::generateRooms(Player& p) {
 
                 if (cellValue == 2) {
                     // Выход - всегда комната с монстром
-                    type = Room::RoomType::MONSTER;
+                    type = Room::RoomType::EXIT;
                 } else {
                     // Обычная комната (значение 1) - может быть пустой или с ивентом
                     // В конструкторе Room тип EMPTY, но generateRoomContent сам решит,

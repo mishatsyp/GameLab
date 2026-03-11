@@ -318,6 +318,10 @@ std::string Event::makeChoice(int choice, Player& player) {
         return "Это событие уже завершено.";
     }
 
+    if (isCompleted != true) { // !!!!!!!!!!!!!!!!!!!!!!!!
+        player.setCheckedRooms(player.getCheckedRooms()+1);
+    }
+
     // Если это событие с монстром
     if (monster) {
         std::string result;
@@ -373,9 +377,6 @@ std::string Event::makeChoice(int choice, Player& player) {
             result = "Вы просто стоите в нерешительности. ";
             break;
     }
-
-    // Применяем эффекты
-    //applyEffects(player, choiceHealth, choiceItem);
 
     // Отмечаем событие как завершенное
     isCompleted = true;

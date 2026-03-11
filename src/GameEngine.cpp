@@ -46,7 +46,7 @@ bool GameEngine::initialize() {
         else {
             Screen::clearScreen();
 
-        while (player->getHealth()>0 && player->getLevel()<=5 && player->getCheckedRooms()<=5) {
+        while (player->getHealth()>0 && player->getLevel()<=5) {
             int choice;
             Screen::chooseAction();
             std::cin >> choice;
@@ -62,12 +62,12 @@ bool GameEngine::initialize() {
 
                     if (currentRoom) {
                         currentRoom->look();
-                        player->setCheckedRooms(player->getCheckedRooms()+1);
                         // Если комната с монстром (значение 2 в матрице) и не исследована - бой
                         if (currentRoom->getType() == Room::RoomType::MONSTER) {
                             if (!currentRoom->getisExplored()) {
                                 Screen::drawMessage("⚔️ Монстр атакует! Начинается бой! ⚔️");
                                  currentRoom->GetEvent()->handleBattle(*player);
+                                player->setCheckedRooms(player->getCheckedRooms()+1);
                             }
 
                         }
@@ -76,6 +76,7 @@ bool GameEngine::initialize() {
                                  int ch;
                                  std::cin >> ch;
                                 Screen::drawMessage(currentRoom->GetEvent()->makeChoice(ch, *player));
+                                 player->setCheckedRooms(player->getCheckedRooms()+1);
                              }
                          }
                     } else {
@@ -185,9 +186,12 @@ bool GameEngine::initialize() {
                         std::cout << "Вы перешли в другую комнату.\n";
 
                         // Если это выход (значение 2) - переходим на следующий уровень
-                        if (currentDungeon->getCell(newX, newY) == 2) {
+                        if (currentDungeon->getCell(newX, newY) == 2 && player->getCheckedRooms()>=5) {
                             Screen::drawMessage("Вы нашли выход на следующий уровень!");
                             nextLevel();
+                        }
+                        else if (currentDungeon->getCell(newX, newY) == 2 && player->getCheckedRooms()<5) {
+                            Screen::drawMessage("Вы не обыскали нужное количество комнат!");
                         }
                     } else {
                         Screen::drawMessage("Там стена! Нельзя пройти.");
@@ -219,6 +223,7 @@ bool GameEngine::initialize() {
 void GameEngine::nextLevel() {
     Screen screen;
     player->setLevel(player->getLevel()+1);
+    player->setCheckedRooms(0);
     if (!currentDungeon) {
         throw GameException("Данж не инициализирован");
     }
