@@ -55,7 +55,7 @@ public:
      */
     //static void drawBattle(const Player& player, const Monster& monster);
 
-    static int chooseAction();
+    static void chooseAction();
 
 private:
     /**

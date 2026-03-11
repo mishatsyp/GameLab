@@ -10,9 +10,7 @@
     // static constexpr char UNKNOWN_ROOM = '?';
     // static constexpr char PLAYER_SYMBOL = '@';
 
-    void Screen::clearScreen() {
-       system("clear");
-    }
+    void Screen::clearScreen() {}
     static void drawDungeonMap(const Dungeon& dungeon, const Player& player){} //Отрисовка карты подземелья
     static void drawCurrentRoomInfo(const Dungeon& dungeon); //Отрисовка информации о текущей комнате
 
@@ -130,7 +128,7 @@ void Screen::drawMenu() {
 static int showActionMenu();
 
 // Screen.cpp
-int Screen::chooseAction() {
+void Screen::chooseAction() {
     std::cout << "\n";
     std::cout << "╔══════════════════════════════════════════════════════════╗\n";
     std::cout << "║                      ВЫБЕРИТЕ ДЕЙСТВИЕ                   ║\n";
