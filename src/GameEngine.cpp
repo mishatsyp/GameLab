@@ -46,7 +46,7 @@ bool GameEngine::initialize() {
         else {
             Screen::clearScreen();
 
-        while (player->getHealth() > 0 || player->getLevel()<=5) {
+        while (player->getHealth()>0 && player->getLevel()<=5 && player->getCheckedRooms()<=5) {
             int choice;
             Screen::chooseAction();
             std::cin >> choice;
@@ -62,12 +62,11 @@ bool GameEngine::initialize() {
 
                     if (currentRoom) {
                         currentRoom->look();
-
-
+                        player->setCheckedRooms(player->getCheckedRooms()+1);
                         // Если комната с монстром (значение 2 в матрице) и не исследована - бой
                         if (currentRoom->getType() == Room::RoomType::MONSTER) {
                             if (!currentRoom->getisExplored()) {
-                                std::cout << "\n⚔️ Монстр атакует! Начинается бой! ⚔️" << std::endl;
+                                Screen::drawMessage("⚔️ Монстр атакует! Начинается бой! ⚔️");
                                  currentRoom->GetEvent()->handleBattle(*player);
                             }
 
@@ -80,7 +79,7 @@ bool GameEngine::initialize() {
                              }
                          }
                     } else {
-                        std::cout << "Ошибка: не удалось получить текущую комнату!" << std::endl;
+                        Screen::drawMessage("Ошибка: не удалось получить текущую комнату!");
                     }
                     break;
                 }
@@ -200,6 +199,7 @@ bool GameEngine::initialize() {
                     std::cout << "Choose another option";
             }
         }
+            Screen::drawGameOver();
         }
         return true;
     } catch (const std::exception& e) {

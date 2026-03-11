@@ -57,6 +57,8 @@ public:
 
     static void chooseAction();
 
+    static void drawGameOver();
+
 private:
     /**
      * @brief Получение символа комнаты по её типу

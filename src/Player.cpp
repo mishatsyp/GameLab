@@ -4,12 +4,8 @@
 
 Player::Player(const std::string& playerName)
     : name( playerName ), inBattle( false ),
-    health( 100 ), damage( 10 ) {}
-
-void Player::attack(Entity &target) {
-    target.takeDamage(damage);
-}
-
+    health( 100 ), damage( 10 ), level(1),checked_rooms(0) {}
+void Player::attack(Entity &target) {target.takeDamage(damage);}
 bool Player::addItem(std::unique_ptr<Item> item) { // зачем bool
     if (inventory.size() < MAX_INVENTORY_SIZE) {
         inventory.push_back(std::move(item));
@@ -27,15 +23,8 @@ bool Player::useItem(const size_t itemIndex) {
     }
     return false;
 }
-
-void Player::showInventory() const {
-    Screen::drawInventory(*this);
-}
-
-int Player::getInventorySize() const {
-    return inventory.size();
-}
-
+void Player::showInventory() const {Screen::drawInventory(*this);}
+int Player::getInventorySize() const {return inventory.size();}
 Item* Player::getItem(size_t itemIndex) const {
     if (itemIndex < inventory.size()) {
         if (inventory[itemIndex]) {
@@ -44,33 +33,14 @@ Item* Player::getItem(size_t itemIndex) const {
     }
     return nullptr;
 }
-
-int Player::getHealth() const {
-    return health;
-}
-
-void Player::setHealth(int h) {
-    health = h;
-}
-
-int Player::getDamage() const {
-    return damage;
-}
-
-void Player::setDamage(int d) {
-    damage = d;
-}
-
-int Player::getLevel() const {
-    return level;
-}
-
-void Player::setLevel(int l) {
-    level=l;
-}
-
+int Player::getHealth() const {return health;}
+void Player::setHealth(int h) {health = h;}
+int Player::getDamage() const {return damage;}
+void Player::setDamage(int d) {damage = d;}
+int Player::getLevel() const {return level;}
+void Player::setLevel(int l) {level=l;}
 void Player::removeItem(size_t index) {
-    if (index < inventory.size()) {
-        inventory.erase(inventory.begin() + static_cast<int>(index));
-    }
+    if (index < inventory.size()) {inventory.erase(inventory.begin() + static_cast<int>(index));}
 }
+void Player::setCheckedRooms(int rooms){checked_rooms=rooms;}
+int Player::getCheckedRooms() const {return checked_rooms;}

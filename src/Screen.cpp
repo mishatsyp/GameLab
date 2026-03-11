@@ -15,7 +15,7 @@
     static void drawCurrentRoomInfo(const Dungeon& dungeon); //Отрисовка информации о текущей комнате
 
      void Screen::drawInventory(const Player& player) {
-        char EMPTY_SLOT = 'X';
+        char EMPTY_SLOT = ' ';
         char WEAPON_SYM = 'S';  // меч
         char POTION_SYM = 'P'; // зелье (можно заменить на '▲' если не поддерживается)
         char ARMOR_SYM = 'A';   // броня (можно заменить на '◆' если не поддерживается)
@@ -104,9 +104,33 @@ void Screen::drawMessage(const std::string& message) {
     }
 }
 
-    /**
-     * @brief Отрисовка меню
-     */
+// Screen.h - добавить
+static void drawGameOver();
+
+// Screen.cpp
+void Screen::drawGameOver() {
+    clearScreen();
+
+    std::cout << "\n";
+    std::cout << "╔══════════════════════════════════════════════════════════╗\n";
+    std::cout << "║                     GAME OVER                            ║\n";
+    std::cout << "╚══════════════════════════════════════════════════════════╝\n\n";
+    std::cout << "──────────────────────────────────────────────────\n";
+    std::cout << "              РАЗРАБОТЧИКИ ПРОЕКТА\n";
+    std::cout << "──────────────────────────────────────────────────\n\n";
+
+    std::cout << "             ░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
+    std::cout << "             ░   Leonid Vorobiev     ░\n";
+    std::cout << "             ░   Suzi Tymanian       ░\n";
+    std::cout << "             ░   Lubov Istomina      ░\n";
+    std::cout << "             ░   Michael Tsypchenko  ░\n";
+    std::cout << "             ░░░░░░░░░░░░░░░░░░░░░░░░░░░\n\n";
+
+    std::cout << "──────────────────────────────────────────────────\n";
+    std::cout << "         Спасибо за игру! Press Enter to exit\n";
+    std::cin.get();
+}
+
 void Screen::drawMenu() {
         clearScreen();
         std::cout << "\n";
@@ -189,18 +213,18 @@ void Screen::drawDungeonMap(const Dungeon& dungeon) {
                 if (isPlayerHere) {
                     std::cout << "[ 👤 ]";  // игрок в комнате
                 } else {
-                    std::cout << "[ ☐  ]";  // пустая комната
+                    std::cout << "[ ☐ ]";  // пустая комната
                 }
             } else if (cell == 2) {
                 // Выход
                 if (isPlayerHere) {
                     std::cout << "[ 👤➡]";  // игрок на выходе
                 } else {
-                    std::cout << "[ ➡  ]";  // выход
+                    std::cout << "[ ➡ ]";  // выход
                 }
             }
         }
-        std::cout << "\n\n";  // двойной отступ между рядами
+        std::cout << "\n";  // двойной отступ между рядами
     }
 
     // Легенда

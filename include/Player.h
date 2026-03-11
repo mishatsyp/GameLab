@@ -15,17 +15,16 @@ class Item;
 class Player {
 private:
     std::string name;
-    bool inBattle;  // Флаг, находимся ли мы в бою
-    // Инвентарь - unique_ptr для предметов
+    bool inBattle;
     int health;
     int damage;
     int level;
+    int checked_rooms;
     std::vector<std::unique_ptr<Item>> inventory;
     static constexpr size_t MAX_INVENTORY_SIZE = 8;
     std::pair<int, int> position;
 public:
     explicit Player(const std::string& playerName);
-    // virtual ~Player() override = default; <- incorrect
     ~Player() = default;
     Player(const Player&) = delete;
     Player& operator=(const Player&) = delete;
@@ -33,8 +32,7 @@ public:
     Player& operator=(Player&&) = default;
 
     // Реализация виртуальных методов
-    void attack(Entity& target); // deleted virtual, override
-    // Методы игрока
+    void attack(Entity& target);
     bool addItem(std::unique_ptr<Item> item);
     bool useItem(size_t itemIndex);
     int getHealth() const;
@@ -47,6 +45,9 @@ public:
     int getLevel() const;
     void setLevel(int l);
     void removeItem(size_t index);
+    int getCheckedRooms() const;
+    void setCheckedRooms(int rooms);
+
 };
 
 #endif // PLAYER_H
