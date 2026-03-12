@@ -91,9 +91,6 @@ void Event::generateMonsterEvent(int level, Player& p) {
     outcomes = {"Вступить в бой", "Попытаться избежать битвы"};
 }
 
-/**
- * @brief Генерация случайного текста для события
- */
 void Event::generateRandomText(int level) {
     Random& rng = Random::getInstance();
 
@@ -154,25 +151,21 @@ void Event::generateRandomText(int level) {
         };
     }
 
-    // Выбираем случайное событие и соответствующие исходы
+
     size_t eventIndex = rng.getInt(0, eventTemplates.size() - 1);
     description = eventTemplates[eventIndex];
 
-    // Добавляем контекст уровня
+
     description += " (Уровень подземелья: " + std::to_string(level) + ")";
 
-    // Выбираем исходы для этого события
+
     if (eventIndex < outcomeTemplates.size()) {
         outcomes = outcomeTemplates[eventIndex];
     } else {
-        // Запасные варианты
         outcomes = {"Выбрать вариант 1", "Выбрать вариант 2"};
     }
 }
 
-/**
- * @brief Обработка боя с монстром
- */
 std::string Event::handleBattle(Player& player) {
     if (!monster) {
         return "Ошибка: монстр не найден!";
@@ -185,11 +178,10 @@ std::string Event::handleBattle(Player& player) {
     result += "                      БОЙ С МОНСТРОМ!\n";
     result += "═══════════════════════════════════════════════════════════\n\n";
 
-    bool playerTurn = true;  // игрок ходит первым
+    bool playerTurn = true;
     bool battleActive = true;
 
     while (battleActive) {
-        // Показываем статус
         result += "\n──────────────────────────────────────────────────\n";
         result += "Ваше здоровье: " + std::to_string(player.getHealth()) + "\n";
         result += "Здоровье " + monster->getName() + ": " + std::to_string(monster->getHealth()) + "\n";
@@ -201,19 +193,16 @@ std::string Event::handleBattle(Player& player) {
             result += "2. Защищаться (уменьшает урон, но тратит прочность оружия)\n";
 
             int choice;
-            std::cout << result;  // выводим на экран
-            result.clear();        // очищаем для следующего хода
+            std::cout << result;
+            result.clear();
             std::cout << "Ваш выбор: ";
             std::cin >> choice;
 
             if (choice == 1) { // Атака
-                // Шанс попадания 80%
                 if (rng.getBool(0.8)) {
                     int damage = player.getDamage();
                     monster->setHealth(monster->getHealth() - damage);
                     result += "Вы наносите " + std::to_string(damage) + " урона!\n";
-
-                    // Уменьшаем прочность оружия при атаке
                     if (player.getEquippedWeapon()) {
                         player.getEquippedWeapon()->reduceDurability(2);
                         if (player.getEquippedWeapon()->isBroken()) {
@@ -228,7 +217,7 @@ std::string Event::handleBattle(Player& player) {
                 result += "Вы встаете в защитную стойку!\n";
                 player.setDefending(true);
 
-                // Уменьшаем прочность оружия при защите
+                // Уменьшаем прочность
                 if (player.getEquippedWeapon()) {
                     player.getEquippedWeapon()->reduceDurability(1);
                     if (player.getEquippedWeapon()->isBroken()) {
@@ -236,14 +225,11 @@ std::string Event::handleBattle(Player& player) {
                     }
                 }
             }
-
-            // Проверка на смерть монстра
             if (monster->getHealth() <= 0) {
                 result += "\n═══════════════════════════════════════════════════════════\n";
                 result += "🏆 ВЫ ПОБЕДИЛИ! 🏆\n";
                 result += monster->getName() + " повержен!\n";
 
-                // Шанс получить трофей
                 if (rng.getBool(0.3)) {
                     result += "Из монстра выпал трофей: ";
                     int itemType = rng.getInt(0, 2);
@@ -264,17 +250,15 @@ std::string Event::handleBattle(Player& player) {
                 break;
             }
 
-            playerTurn = false;  // передаем ход монстру
+            playerTurn = false;
         }
         else {
             // Ход монстра
             result += "\nХод " + monster->getName() + "!\n";
 
-            // Шанс попадания монстра 70%
             if (rng.getBool(0.7)) {
                 int damage = monster->getAttackPower();
 
-                // Если игрок защищался, урон уменьшается вдвое
                 if (player.GetisDefending()) {
                     damage /= 2;
                     if (damage < 1) damage = 1;
@@ -284,7 +268,6 @@ std::string Event::handleBattle(Player& player) {
                 player.setHealth(player.getHealth() - damage);
                 result += monster->getName() + " наносит " + std::to_string(damage) + " урона!\n";
 
-                // Уменьшаем прочность брони при получении урона
                 if (player.getEquippedArmor()) {
                     player.getEquippedArmor()->reduceDurability(1);
                     if (player.getEquippedArmor()->isBroken()) {
@@ -295,10 +278,9 @@ std::string Event::handleBattle(Player& player) {
                 result += monster->getName() + " промахнулся!\n";
             }
 
-            // Сбрасываем защиту игрока
+
             player.setDefending(false);
 
-            // Проверка на смерть игрока
             if (player.getHealth() <= 0) {
                 result += "\n═══════════════════════════════════════════════════════════\n";
                 result += "💀 ВЫ ПОГИБЛИ... 💀\n";
@@ -308,25 +290,18 @@ std::string Event::handleBattle(Player& player) {
                 break;
             }
 
-            playerTurn = true;  // передаем ход игроку
+            playerTurn = true;
         }
-
-        // Добавляем разделитель между ходами
         result += "──────────────────────────────────────────────────\n";
     }
 
     result += "\n═══════════════════════════════════════════════════════════\n";
     return result;
 }
-
-/**
- * @brief Попытка избежать битвы
- */
 std::string Event::avoidBattle(Player& player) {
     if (!monster) {
         return "Ошибка: монстр не найден!";
     }
-
     Random& rng = Random::getInstance();
     std::string result;
 
@@ -340,8 +315,6 @@ std::string Event::avoidBattle(Player& player) {
         result += "Монстр вас не заметил.\n";
     } else {
         result += "Монстр заметил вас и атаковал!\n";
-
-        // Монстр наносит урон, но меньше обычного
         int damageTaken = player.getDamage() / 2;
         if (damageTaken < 1) damageTaken = 1;
 
@@ -358,33 +331,21 @@ std::string Event::avoidBattle(Player& player) {
             result += "Вам удалось вырваться и убежать.\n";
         }
     }
-
     result += "\n═══════════════════════════════════════════════════════════\n";
-
     return result;
 }
-
-/**
- * @brief Применение последствий к игроку
- */
 void Event::applyEffects(Player& player, int choiceHealth, const std::string& choiceItem) {
-    // Применяем влияние на здоровье
     if (choiceHealth != 0) {
         int newHealth = player.getHealth() + choiceHealth;
         player.setHealth(newHealth);
-
         if (choiceHealth > 0) {
             std::cout << "Вы восстановили " << choiceHealth << " здоровья!\n";
         } else if (choiceHealth < 0) {
             std::cout << "Вы потеряли " << -choiceHealth << " здоровья!\n";
         }
     }
-
-    // Добавляем предмет, если есть
     if (!choiceItem.empty()) {
         std::unique_ptr<Item> newItem;
-
-        // Создаем соответствующий предмет
         if (choiceItem.find("Зелье") != std::string::npos) {
             newItem = std::make_unique<Potion>(choiceItem, 20, 3);
         } else if (choiceItem.find("Меч") != std::string::npos) {
@@ -398,7 +359,6 @@ void Event::applyEffects(Player& player, int choiceHealth, const std::string& ch
         } else {
             newItem = std::make_unique<Potion>(choiceItem, 15, 2);
         }
-
         if (player.addItem(std::move(newItem))) {
             std::cout << "Вы получили предмет: " << choiceItem << "!\n";
         } else {
@@ -406,13 +366,6 @@ void Event::applyEffects(Player& player, int choiceHealth, const std::string& ch
         }
     }
 }
-
-/**
- * @brief Выбор варианта действия
- * @param choice номер выбранного варианта (0, 1)
- * @param player ссылка на игрока
- * @return текст результата выбора
- */
 std::string Event::makeChoice(int choice, Player& player) {
     if (choice < 0 || choice >= static_cast<int>(outcomes.size())) {
         return "Неверный выбор!";
@@ -422,48 +375,40 @@ std::string Event::makeChoice(int choice, Player& player) {
         return "Это событие уже завершено.";
     }
 
-    if (isCompleted != true) { // !!!!!!!!!!!!!!!!!!!!!!!!
+    if (isCompleted != true) {
         player.setCheckedRooms(player.getCheckedRooms()+1);
     }
-
-    // Если это событие с монстром
     if (monster) {
         std::string result;
 
-        if (choice == 0) { // Вступить в бой
+        if (choice == 0) {
             result = handleBattle(player);
-        } else { // Избежать битвы
+        } else {
             result = avoidBattle(player);
         }
         isCompleted = true;
         return result;
     }
-
-    // Обычное событие (без монстра)
     Random& rng = Random::getInstance();
     std::string result;
     int choiceHealth = 0;
     std::string choiceItem;
-
-    // Генерируем результат в зависимости от выбора
     switch (choice) {
-        case 0: // Первый вариант
+        case 0:
             result = "Вы решили " + outcomes[0] + ". ";
             if (rng.getBool(0.6)) {
-                // Хороший исход
                 choiceHealth = rng.getInt(5, 15);
                 if (rng.getBool(0.3) && ItemReward.empty()) {
                     choiceItem = "Малое зелье здоровья";
                 }
                 result += "Вам повезло! ";
             } else {
-                // Плохой исход
                 choiceHealth = -rng.getInt(3, 10);
                 result += "Что-то пошло не так... ";
             }
             break;
 
-        case 1: // Второй вариант
+        case 1:
             result = "Вы решили " + outcomes[1] + ". ";
             if (rng.getBool(0.5)) {
                 choiceHealth = rng.getInt(-5, 10);
@@ -480,11 +425,7 @@ std::string Event::makeChoice(int choice, Player& player) {
             result = "Вы просто стоите в нерешительности. ";
             break;
     }
-
-    // Отмечаем событие как завершенное
     isCompleted = true;
-
-    // Добавляем информацию о полученном уроне/лечении к результату
     if (choiceHealth > 0) {
         result += "Вы восстановили " + std::to_string(choiceHealth) + " HP.";
     } else if (choiceHealth < 0) {
@@ -497,17 +438,9 @@ std::string Event::makeChoice(int choice, Player& player) {
 
     return result;
 }
-
-/**
- * @brief Проверка, есть ли монстр в событии
- */
 bool Event::hasMonster() const {
     return monster != nullptr;
 }
-
-/**
- * @brief Получить монстра
- */
 Monster* Event::getMonster() const {
     return monster.get();
 }

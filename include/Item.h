@@ -23,7 +23,6 @@ public:
     virtual std::string getStats() const = 0;
     virtual std::string getItemType() const = 0;
     virtual int getItemDurability() const=0;
-   // virtual std::unique_ptr<Item> clone() const = 0;
     const std::string& getName() const { return name; }
 };
 

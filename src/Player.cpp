@@ -5,8 +5,10 @@
 Player::Player(const std::string& playerName)
     : name(playerName), inBattle(false), health(100), damage(10),
       level(1), checked_rooms(0), isDefending(false) {}
+
 void Player::attack(Entity &target) {target.takeDamage(damage);}
-bool Player::addItem(std::unique_ptr<Item> item) { // зачем bool
+
+bool Player::addItem(std::unique_ptr<Item> item) {
     if (inventory.size() < MAX_INVENTORY_SIZE) {
         inventory.push_back(std::move(item));
         return true;
@@ -23,14 +25,18 @@ bool Player::useItem(const size_t itemIndex) {
     }
     return false;
 }
+
 void Player::showInventory() const {Screen::drawInventory(*this);}
+
 int Player::getInventorySize() const {return inventory.size();}
-std::optional<Item*> Player::getItem(size_t itemIndex) const {
+
+std::optional<std::shared_ptr<Item>> Player::getItem(size_t itemIndex) const {
     if (itemIndex < inventory.size() && inventory[itemIndex]) {
-        return inventory[itemIndex].get();
+        return inventory[itemIndex];
     }
     return std::nullopt;
 }
+
 int Player::getHealth() const {return health;}
 void Player::setHealth(int h) {health = h;}
 int Player::getDamage() const {return damage;}
@@ -40,31 +46,41 @@ void Player::setLevel(int l) {level=l;}
 void Player::removeItem(size_t index) {
     if (index < inventory.size()) {inventory.erase(inventory.begin() + static_cast<int>(index));}
 }
+
 void Player::setCheckedRooms(int rooms){checked_rooms=rooms;}
 int Player::getCheckedRooms() const {return checked_rooms;}
-bool Player::equipWeapon(std::unique_ptr<Weapon> weapon) {
+bool Player::equipWeapon(std::shared_ptr<Weapon> weapon) {
     if (!weapon) return false;
-
-    // Если было оружие - возвращаем в инвентарь
     if (equippedWeapon) {
-        inventory.push_back(std::move(equippedWeapon));
+        inventory.push_back(equippedWeapon);
     }
-
-    equippedWeapon = std::move(weapon);
+    for (size_t i = 0; i < inventory.size(); i++) {
+        if (inventory[i] == weapon) {
+            inventory.erase(inventory.begin() + i);
+            break;
+        }
+    }
+    equippedWeapon = weapon;
     return true;
 }
 
-bool Player::equipArmor(std::unique_ptr<Armor> armor) {
+bool Player::equipArmor(std::shared_ptr<Armor> armor) {
     if (!armor) return false;
     if (equippedArmor) {
-        inventory.push_back(std::move(equippedArmor));
+        inventory.push_back(equippedArmor);
     }
-    equippedArmor = std::move(armor);
+    for (size_t i = 0; i < inventory.size(); i++) {
+        if (inventory[i] == armor) {
+            inventory.erase(inventory.begin() + i);
+            break;
+        }
+    }
+    equippedArmor = armor;
     return true;
 }
 
 int Player::getTotalDamage() const {
-    int total = damage; // базовый урон
+    int total = damage;
     if (equippedWeapon) {
         total += equippedWeapon->getDamage();
     }
@@ -72,7 +88,7 @@ int Player::getTotalDamage() const {
 }
 
 int Player::getTotalDefense() const {
-    int total = 0; // базовая защита
+    int total = 0;
     if (equippedArmor) {
         total += equippedArmor->getDefense();
     }

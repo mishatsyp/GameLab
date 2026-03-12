@@ -23,9 +23,9 @@ private:
     int level;
     int checked_rooms;
     bool isDefending;
-    std::unique_ptr<Weapon> equippedWeapon;
-    std::unique_ptr<Armor> equippedArmor;
-    std::vector<std::unique_ptr<Item>> inventory;
+    std::shared_ptr<Weapon> equippedWeapon;
+    std::shared_ptr<Armor> equippedArmor;
+    std::vector<std::shared_ptr<Item>> inventory;
     static constexpr size_t MAX_INVENTORY_SIZE = 8;
     std::pair<int, int> position;
 public:
@@ -36,30 +36,33 @@ public:
     Player(Player&&) = default;
     Player& operator=(Player&&) = default;
 
-    // Реализация виртуальных методов
     void attack(Entity& target);
+
     bool addItem(std::unique_ptr<Item> item);
     bool useItem(size_t itemIndex);
+    std::optional<std::shared_ptr<Item>> getItem(size_t itemIndex) const;
+    void removeItem(size_t index);
+    int getInventorySize() const;
+    void showInventory() const;
+
+    bool equipWeapon(std::shared_ptr<Weapon> weapon);
+    bool equipArmor(std::shared_ptr<Armor> armor);
+
+    std::shared_ptr<Weapon> getEquippedWeapon() const { return equippedWeapon; }
+    std::shared_ptr<Armor> getEquippedArmor() const { return equippedArmor; }
+
+    bool GetisDefending() const;
+    void setDefending(bool defending);
+
     int getHealth() const;
     void setHealth(int h);
     int getDamage() const;
     void setDamage(int d);
-    void showInventory() const;
-    int getInventorySize() const;
-    std::optional<Item*> getItem(size_t itemIndex) const;
     int getLevel() const;
     void setLevel(int l);
-    void removeItem(size_t index);
     int getCheckedRooms() const;
     void setCheckedRooms(int rooms);
-    bool equipWeapon(std::unique_ptr<Weapon> weapon);
-    bool equipArmor(std::unique_ptr<Armor> armor);
-    void unequipWeapon();
-    void unequipArmor();
-    bool GetisDefending() const;
-    void setDefending(bool defending);
-    Armor* getEquippedArmor() const { return equippedArmor.get(); }
-    Weapon* getEquippedWeapon() const { return equippedWeapon.get(); }
+
     int getTotalDamage() const;
     int getTotalDefense() const;
 };

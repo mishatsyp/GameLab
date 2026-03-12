@@ -86,7 +86,7 @@ bool GameEngine::initialize() {
                             // Получаем предмет по индексу (конвертируем в 0-базовый индекс)
                             auto itemOpt = player->getItem(itemIndex - 1);
                             if (itemOpt.has_value()) {
-                                Item* item = itemOpt.value();
+                                auto item = itemOpt.value();
                                 item->use(*player);
 
                                 // Проверка на прочность

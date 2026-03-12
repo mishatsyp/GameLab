@@ -11,6 +11,7 @@
     // static constexpr char PLAYER_SYMBOL = '@';
 
     void Screen::clearScreen() {}
+
      void Screen::drawInventory(const Player& player) {
         char EMPTY_SLOT = ' ';
         char WEAPON_SYM = 'S';  // меч
@@ -31,7 +32,7 @@
             for (int i = 0; i < player.getInventorySize(); i++) {
                 auto itemOpt = player.getItem(i);
                 if (itemOpt.has_value()) {
-                    Item* item = itemOpt.value();
+                    auto item = itemOpt.value();  // item теперь shared_ptr<Item>
                     std::cout << "  " << (i+1) << ". " << item->getName() << "\n";
                 }
             }
@@ -62,7 +63,7 @@
             for (int i = 0; i < player.getInventorySize(); i++) {
                 auto itemOpt = player.getItem(i);
                 if (itemOpt.has_value()) {
-                    Item* item = itemOpt.value();
+                    auto item = itemOpt.value();  // item теперь shared_ptr<Item>
                     std::cout << "  " << (i+1) << ". " << item->getName() << "\n";
                 }
             }
@@ -72,10 +73,6 @@
         std::cout << "\n──────────────────────────────────────────────────\n";
     };
 
-
-    /**
-     * @brief Отрисовка сообщения
-     */
 void Screen::drawMessage(const std::string& message) {
     std::cout << "\n";
     // Разбиваем длинное сообщение на строки по 50 символов
