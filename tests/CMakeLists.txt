@@ -5,6 +5,8 @@ add_executable(dungeon_tests
         ../src/Event.cpp
         test_random.cpp
         ../src/Random.cpp
+        test_room.cpp
+        ../src/Room.cpp
 )
 
 target_include_directories(dungeon_tests PRIVATE
