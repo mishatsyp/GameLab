@@ -10,7 +10,9 @@
 //#include "Item.h"
 // #include "Screen.h"
 
+class Armor;
 class Item;
+class Weapon;
 
 class Player {
 private:
@@ -20,6 +22,9 @@ private:
     int damage;
     int level;
     int checked_rooms;
+    bool isDefending;
+    std::unique_ptr<Weapon> equippedWeapon;
+    std::unique_ptr<Armor> equippedArmor;
     std::vector<std::unique_ptr<Item>> inventory;
     static constexpr size_t MAX_INVENTORY_SIZE = 8;
     std::pair<int, int> position;
@@ -47,7 +52,16 @@ public:
     void removeItem(size_t index);
     int getCheckedRooms() const;
     void setCheckedRooms(int rooms);
-
+    bool equipWeapon(std::unique_ptr<Weapon> weapon);
+    bool equipArmor(std::unique_ptr<Armor> armor);
+    void unequipWeapon();
+    void unequipArmor();
+    bool GetisDefending() const;
+    void setDefending(bool defending);
+    Armor* getEquippedArmor() const { return equippedArmor.get(); }
+    Weapon* getEquippedWeapon() const { return equippedWeapon.get(); }
+    int getTotalDamage() const;
+    int getTotalDefense() const;
 };
 
 #endif // PLAYER_H

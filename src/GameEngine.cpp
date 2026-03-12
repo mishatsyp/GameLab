@@ -60,27 +60,11 @@ bool GameEngine::initialize() {
                     // Получаем комнату по координатам
                     Room* currentRoom = currentDungeon->getRoomAt(x, y);
 
-                    if (currentRoom) {
-                        currentRoom->look();
-                        // Если комната с монстром (значение 2 в матрице) и не исследована - бой
-                        if (currentRoom->getType() == Room::RoomType::MONSTER) {
-                            if (!currentRoom->getisExplored()) {
-                                Screen::drawMessage("⚔️ Монстр атакует! Начинается бой! ⚔️");
-                                 currentRoom->GetEvent()->handleBattle(*player);
-                                player->setCheckedRooms(player->getCheckedRooms()+1);
-                            }
-
+                    if (currentRoom){
+                        currentRoom->look(*player);  // просто вызываем look
+                        if (currentRoom->getisExplored()) {  // если комната стала исследованной
+                            player->setCheckedRooms(player->getCheckedRooms() + 1);
                         }
-                        if (currentRoom->getType() == Room::RoomType::EVENT) {
-                             if (!currentRoom->getisExplored()) {
-                                 int ch;
-                                 std::cin >> ch;
-                                Screen::drawMessage(currentRoom->GetEvent()->makeChoice(ch, *player));
-                                 player->setCheckedRooms(player->getCheckedRooms()+1);
-                             }
-                         }
-                    } else {
-                        Screen::drawMessage("Ошибка: не удалось получить текущую комнату!");
                     }
                     break;
                 }
@@ -133,68 +117,61 @@ bool GameEngine::initialize() {
                     break;
 
                 case 3: {
-                    // Получаем текущие координаты игрока в данже
                     int currentX = currentDungeon->getCurrentX();
                     int currentY = currentDungeon->getCurrentY();
 
-                    // Спрашиваем у игрока направление движения
                     char direction;
                     Screen::drawDungeonMap(*currentDungeon);
                     Screen::drawMessage("Куда хотите пойти? (w - вверх, s - вниз, a - влево, d - вправо): ");
                     std::cin >> direction;
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // очищаем буфер
 
-                    // Определяем новые координаты в зависимости от направления
                     int newX = currentX;
                     int newY = currentY;
 
                     switch (direction) {
-                        case 'w':
-                            newY--;
-                            break;
-                        case 's':
-                            newY++;
-                            break;
-                        case 'a':
-                            newX--;
-                            break;
-                        case 'd':
-                            newX++;
-                            break;
+                        case 'w': newY--; break;
+                        case 's': newY++; break;
+                        case 'a': newX--; break;
+                        case 'd': newX++; break;
                         default:
                             std::cout << "Неверное направление!\n";
+                            Screen::drawMessage("Нажмите Enter...");
+                            std::cin.get();
+                            Screen::clearScreen();
                             break;
                     }
 
                     if (currentDungeon->getCell(newX, newY) == 1 || currentDungeon->getCell(newX, newY) == 2) {
-                        // Можно двигаться - обновляем позицию игрока
                         switch (direction) {
-                            case 'w':
-                                currentDungeon->moveUp();
-                                break;
-                            case 's':
-                                currentDungeon->moveDown();
-                                break;
-                            case 'a':
-                                currentDungeon->moveLeft();
-                                break;
-                            case 'd':
-                                currentDungeon->moveRight();
-                                break;
-                            default:
-                                Screen::drawMessage("Choose direction pls");
+                            case 'w': currentDungeon->moveUp(); break;
+                            case 's': currentDungeon->moveDown(); break;
+                            case 'a': currentDungeon->moveLeft(); break;
+                            case 'd': currentDungeon->moveRight(); break;
                         }
+
                         std::cout << "Вы перешли в другую комнату.\n";
 
-                        // Если это выход (значение 2) - переходим на следующий уровень
-                        if (currentDungeon->getCell(newX, newY) == 2 && player->getCheckedRooms()>=5) {
-                            Screen::drawMessage("Вы нашли выход на следующий уровень!");
-                            nextLevel();
+                        // Проверка на выход
+                        if (currentDungeon->getCell(newX, newY) == 2) {
+                            if (player->getCheckedRooms() >= 5) {
+                                Screen::drawMessage("Вы нашли выход на следующий уровень!");
+                                nextLevel();
+                            } else {
+                                Screen::drawMessage("Вы не обыскали нужное количество комнат!");
+                            }
                         }
-                        else if (currentDungeon->getCell(newX, newY) == 2 && player->getCheckedRooms()<5) {
-                            Screen::drawMessage("Вы не обыскали нужное количество комнат!");
-                        }
+
+                        // Пауза перед возвратом в меню
+                        Screen::drawMessage("Нажмите Enter чтобы продолжить...");
+                        std::cin.get();
+                        Screen::clearScreen();
+
                     } else {
                         Screen::drawMessage("Там стена! Нельзя пройти.");
+                        Screen::drawMessage("Нажмите Enter...");
+                        std::cin.get();
+                        Screen::clearScreen();
                     }
                     break;
                 }
@@ -229,7 +206,7 @@ void GameEngine::nextLevel() {
     }
 
     currentLevel++;
-    Screen::drawMessage("ПЕРЕХОД НА УРОВЕНЬ ");
+    // Screen::drawMessage("ПЕРЕХОД НА УРОВЕНЬ ");
 
     // Создаем новый уровень подземелья
     currentDungeon = std::make_unique<Dungeon>(*player); // обработка нового уровня (а может ну его?)

@@ -3,8 +3,8 @@
 #include "../include/Screen.h"
 
 Player::Player(const std::string& playerName)
-    : name( playerName ), inBattle( false ),
-    health( 100 ), damage( 10 ), level(1),checked_rooms(0) {}
+    : name(playerName), inBattle(false), health(100), damage(10),
+      level(1), checked_rooms(0), isDefending(false) {}
 void Player::attack(Entity &target) {target.takeDamage(damage);}
 bool Player::addItem(std::unique_ptr<Item> item) { // зачем bool
     if (inventory.size() < MAX_INVENTORY_SIZE) {
@@ -17,7 +17,7 @@ bool Player::addItem(std::unique_ptr<Item> item) { // зачем bool
 bool Player::useItem(const size_t itemIndex) {
     if (itemIndex < inventory.size()) {
         if (inventory[itemIndex]) {
-            // inventory[itemIndex] -> use(); ???
+            inventory[itemIndex]->use(*this);
             return true;
         }
     }
@@ -44,3 +44,46 @@ void Player::removeItem(size_t index) {
 }
 void Player::setCheckedRooms(int rooms){checked_rooms=rooms;}
 int Player::getCheckedRooms() const {return checked_rooms;}
+bool Player::equipWeapon(std::unique_ptr<Weapon> weapon) {
+    if (!weapon) return false;
+
+    // Если было оружие - возвращаем в инвентарь
+    if (equippedWeapon) {
+        inventory.push_back(std::move(equippedWeapon));
+    }
+
+    equippedWeapon = std::move(weapon);
+    return true;
+}
+
+bool Player::equipArmor(std::unique_ptr<Armor> armor) {
+    if (!armor) return false;
+    if (equippedArmor) {
+        inventory.push_back(std::move(equippedArmor));
+    }
+    equippedArmor = std::move(armor);
+    return true;
+}
+
+int Player::getTotalDamage() const {
+    int total = damage; // базовый урон
+    if (equippedWeapon) {
+        total += equippedWeapon->getDamage();
+    }
+    return total;
+}
+
+int Player::getTotalDefense() const {
+    int total = 0; // базовая защита
+    if (equippedArmor) {
+        total += equippedArmor->getDefense();
+    }
+    return total;
+}
+
+void Player::setDefending(bool defending) {
+    isDefending = defending;
+}
+
+
+bool Player::GetisDefending() const {return  isDefending;}
