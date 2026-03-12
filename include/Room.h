@@ -15,7 +15,7 @@ public:
     enum class RoomType {
         EMPTY,      // Пустая комната (только осмотреться)
         EVENT,      // Комната с событием
-        MONSTER,
+        // MONSTER,
         EXIT// Выход на следующий уровень
     };
 private:
@@ -30,7 +30,7 @@ public:
     Room(Room&&) noexcept = default; // Разрешаем перемещение
     Room& operator=(Room&&) noexcept = default;
     void generateRoomContent(Player& player);
-    void look() const;
+    void look(Player& player);
     RoomType getType() const { return type; }
     bool getisExplored() const {return isExplored;}
     //Event* getEvent() const { return roomEvent.get(); }

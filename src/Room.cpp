@@ -11,12 +11,6 @@ Room::Room(RoomType roomType, Player& p) : type(roomType), isExplored(false) {
 
 void Room::generateRoomContent(Player& p) {
     Random& rng = Random::getInstance();
-
-    // Если комната с монстром - ничего не генерируем (будет бой)
-    if (type == RoomType::MONSTER) {
-        return;
-    }
-
     // Если тип не задан (EMPTY), рандомно выбираем между EMPTY и EVENT
     if (type == RoomType::EMPTY) {
         // 70% шанс на ивент, 30% на пустую
@@ -33,47 +27,80 @@ void Room::generateRoomContent(Player& p) {
     }
 }
 
-void Room::look() const {
-    std::string result;
-    // if (isCompleted != true) {
-    //     player.setCheckedRooms(player.getCheckedRooms()+1); // !!!!!!!!!!!!!!!!!!!!!!!!!
-    // }
-
-    // В зависимости от типа комнаты
+void Room::look(Player& player) {
     switch(type) {
         case RoomType::EMPTY:
             if (isExplored) {
                 Screen::drawMessage("Вы снова в пустой комнате. Ничего не изменилось.");
             } else {
                 Screen::drawMessage("Пустая комната. Здесь ничего нет.");
+                isExplored = true;
             }
             break;
 
         case RoomType::EVENT:
-            if (isExplored) {
-                if (roomEvent && !roomEvent->getIsCompleted()) {
-                    Screen::drawMessage("Событие все еще активно.");
-                } else {
-                    Screen::drawMessage("Вы уже прошли это событие. В комнате ничего не изменилось.");
-                }
-            } else {
-                if (roomEvent) {
-                    Screen::drawMessage(roomEvent->getDescription());
-                    // Screen::drawMessage(roomEvent->getOutcomes());
-                    for (auto& x : roomEvent->getOutcomes()) {
-                        Screen::drawMessage(x);
+            if (roomEvent) {
+                // Если событие уже завершено
+                if (roomEvent->getIsCompleted()) {
+                    if (isExplored) {
+                        Screen::drawMessage("Вы уже прошли это событие. В комнате ничего не изменилось.");
+                    } else {
+                        Screen::drawMessage("Вы прошли событие. Комната выглядит обычно.");
+                        isExplored = true;
                     }
-                } else {
-                    Screen::drawMessage("Странная комната...");
+                    break;  // важно выйти!
                 }
-            }
-            break;
 
-        case RoomType::MONSTER:
-            if (isExplored) {
-                Screen::drawMessage("Вы снова в комнате с монстром.");
+                // Если событие активно
+                if (isExplored) {
+                    Screen::drawMessage("Вы возвращаетесь к событию...");
+                }
+
+                while (!roomEvent->getIsCompleted()) {
+                    if (!isExplored) {
+                        Screen::drawMessage(roomEvent->getDescription());
+                    }
+
+                    std::string outcomesText = "Выберите действие:\n";
+                    for (size_t i = 0; i < roomEvent->getOutcomes().size(); i++) {
+                        outcomesText += std::to_string(i+1) + ". " + roomEvent->getOutcomes()[i] + "\n";
+                    }
+                    Screen::drawMessage(outcomesText);
+
+                    int choice = -1;
+                    bool validInput = false;
+
+                    while (!validInput) {
+                        std::cout << "Ваш выбор: ";
+                        std::cin >> choice;
+
+                        if (std::cin.fail()) {
+                            std::cin.clear();
+                            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                            Screen::drawMessage("Ошибка ввода! Введите число.");
+                            continue;
+                        }
+
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                        if (choice >= 1 && choice <= static_cast<int>(roomEvent->getOutcomes().size())) {
+                            validInput = true;
+                        } else {
+                            Screen::drawMessage("Неверный выбор! Введите число от 1 до " +
+                                               std::to_string(roomEvent->getOutcomes().size()));
+                        }
+                    }
+
+                    std::string result = roomEvent->makeChoice(choice - 1, player);
+                    Screen::drawMessage(result);
+                }
+
+                // Событие завершено
+                isExplored = true;
+                Screen::drawMessage("Вы прошли событие. Теперь комната пуста.");
+
             } else {
-                Screen::drawMessage("В комнате монстр! Приготовьтесь к бою!");
+                Screen::drawMessage("Странная комната...");
             }
             break;
 
