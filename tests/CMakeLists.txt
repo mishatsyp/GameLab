@@ -7,13 +7,15 @@ add_executable(dungeon_tests
         ../src/Random.cpp
         test_room.cpp
         ../src/Room.cpp
+        test_Item.cpp
+        ../src/Item.cpp
 
         ../src/Player.cpp
-        ../src/Item.cpp
         ../src/Dungeon.cpp
         ../src/Screen.cpp
         ../src/GameEngine.cpp
         test_Dungeon.cpp
+
 )
 
 target_include_directories(dungeon_tests PRIVATE
@@ -33,3 +35,4 @@ add_test(NAME EventTest COMMAND dungeon_tests --gtest_filter=EventTest.*)
 add_test(NAME RandomTest COMMAND dungeon_tests --gtest_filter=RandomTest.*)
 add_test(NAME RoomTest COMMAND dungeon_tests --gtest_filter=RoomTest.*)
 add_test(NAME DungeonTest COMMAND dungeon_tests --gtest_filter=DungeonTest.*)
+add_test(NAME ItemTest COMMAND dungeon_tests --gtest_filter=ItemTest.*)
