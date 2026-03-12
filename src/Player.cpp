@@ -25,13 +25,11 @@ bool Player::useItem(const size_t itemIndex) {
 }
 void Player::showInventory() const {Screen::drawInventory(*this);}
 int Player::getInventorySize() const {return inventory.size();}
-Item* Player::getItem(size_t itemIndex) const {
-    if (itemIndex < inventory.size()) {
-        if (inventory[itemIndex]) {
-            return inventory[itemIndex].get();
-        }
+std::optional<Item*> Player::getItem(size_t itemIndex) const {
+    if (itemIndex < inventory.size() && inventory[itemIndex]) {
+        return inventory[itemIndex].get();
     }
-    return nullptr;
+    return std::nullopt;
 }
 int Player::getHealth() const {return health;}
 void Player::setHealth(int h) {health = h;}

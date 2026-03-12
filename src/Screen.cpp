@@ -26,20 +26,14 @@
 
         // Строка с иконками предметов
         std::cout << "│";
-        for (int i = 0; i < 8; i++) {
-            if (i < player.getInventorySize()) {
-                // Получаем предмет из инвентаря
-                auto item = player.getItem(i);
-                if (item) {
-                    char sym = EMPTY_SLOT;
-                    if (item->getItemType() == "weapon") sym = WEAPON_SYM;
-                    else if (item->getItemType() == "potion") sym = POTION_SYM;
-                    else if (item->getItemType() == "armor") sym = ARMOR_SYM;
-
-                    std::cout << "  " << sym << "  │";
+        if (player.getInventorySize() > 0) {
+            std::cout << "Предметы:\n";
+            for (int i = 0; i < player.getInventorySize(); i++) {
+                auto itemOpt = player.getItem(i);
+                if (itemOpt.has_value()) {
+                    Item* item = itemOpt.value();
+                    std::cout << "  " << (i+1) << ". " << item->getName() << "\n";
                 }
-            } else {
-                std::cout << "  " << EMPTY_SLOT << "  │";
             }
         }
         std::cout << "\n";
@@ -63,17 +57,16 @@
                   << ARMOR_SYM << " - броня\n\n";
 
 
-        // Если есть предметы - показываем их описания
         if (player.getInventorySize() > 0) {
             std::cout << "Предметы:\n";
             for (int i = 0; i < player.getInventorySize(); i++) {
-                auto item = player.getItem(i);
-                if (item) {
-                    std::cout << "  " << (i+1) << ". " << item->getName()
-                             <<"\n";
+                auto itemOpt = player.getItem(i);
+                if (itemOpt.has_value()) {
+                    Item* item = itemOpt.value();
+                    std::cout << "  " << (i+1) << ". " << item->getName() << "\n";
                 }
             }
-        } else {
+        }else {
             std::cout << "Инвентарь пуст. Найдите предметы в подземелье!\n";
         }
         std::cout << "\n──────────────────────────────────────────────────\n";

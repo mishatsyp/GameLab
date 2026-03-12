@@ -46,7 +46,7 @@ public:
     void setDamage(int d);
     void showInventory() const;
     int getInventorySize() const;
-    Item* getItem(size_t itemIndex) const;
+    std::optional<Item*> getItem(size_t itemIndex) const;
     int getLevel() const;
     void setLevel(int l);
     void removeItem(size_t index);

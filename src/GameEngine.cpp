@@ -84,23 +84,15 @@ bool GameEngine::initialize() {
 
                         if (itemIndex >= 1 && itemIndex <= inventorySize) {
                             // Получаем предмет по индексу (конвертируем в 0-базовый индекс)
-                            Item* item = player->getItem(itemIndex - 1);
+                            auto itemOpt = player->getItem(itemIndex - 1);
+                            if (itemOpt.has_value()) {
+                                Item* item = itemOpt.value();
+                                item->use(*player);
 
-                            if (item) {
-                                // Пытаемся использовать предмет
-                                try {
-                                    // Используем существующий метод useItem, но он пока не реализован
-                                    // Временно используем прямой вызов use()
-                                    item->use(*player);
-                                    std::cout << "Предмет \"" << item->getName() << "\" использован.\n";
-
-                                    // Проверяем, не сломался ли предмет (для оружия и брони)
-                                    if (item->getItemDurability() <= 0) {
-                                        std::cout << "Предмет сломался и удален из инвентаря.\n";
-                                        player->removeItem(itemIndex - 1);
-                                    }
-                                } catch (const std::exception& e) {
-                                    std::cout << "Ошибка при использовании предмета: " << e.what() << "\n";
+                                // Проверка на прочность
+                                if (item->getItemDurability() <= 0) {
+                                    std::cout << "Предмет сломался и удален из инвентаря.\n";
+                                    player->removeItem(itemIndex - 1);
                                 }
                             } else {
                                 std::cout << "Ошибка: предмет не найден!\n";
