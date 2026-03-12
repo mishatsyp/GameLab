@@ -7,7 +7,6 @@
 
 TEST(ItemTest, Constructor) {}
 
-// Тесты для Potion
 TEST(PotionTest, Constructor) {
     Potion potion(30);
     EXPECT_EQ(potion.getName(), "Зелье здоровья");
@@ -69,7 +68,6 @@ TEST(PotionTest, GetStats) {
     EXPECT_NE(stats.find("3"), std::string::npos);
 }
 
-// Тесты для Weapon
 TEST(WeaponTest, Constructor) {
     Weapon weapon("Steel Sword", 15);
     EXPECT_EQ(weapon.getName(), "Steel Sword");

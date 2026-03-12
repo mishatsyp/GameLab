@@ -15,6 +15,7 @@ add_executable(dungeon_tests
         ../src/Screen.cpp
         ../src/GameEngine.cpp
         test_Dungeon.cpp
+        test_Screen.cpp
 
 )
 
@@ -36,3 +37,4 @@ add_test(NAME RandomTest COMMAND dungeon_tests --gtest_filter=RandomTest.*)
 add_test(NAME RoomTest COMMAND dungeon_tests --gtest_filter=RoomTest.*)
 add_test(NAME DungeonTest COMMAND dungeon_tests --gtest_filter=DungeonTest.*)
 add_test(NAME ItemTest COMMAND dungeon_tests --gtest_filter=ItemTest.*)
+add_test(NAME ScreenTest COMMAND dungeon_tests --gtest_filter=ScreenTest.*)

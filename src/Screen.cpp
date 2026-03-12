@@ -108,14 +108,14 @@ void Screen::drawGameOver() {
 
     std::cout << "             ░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
     std::cout << "             ░   Leonid Vorobiev       ░\n";
-    std::cout << "             ░   Suzi Tymanian         ░\n";
+    std::cout << "             ░   Syuzi Tumanian         ░\n";
     std::cout << "             ░   Lubov Istomina        ░\n";
     std::cout << "             ░   Michael Tsypchenko    ░\n";
     std::cout << "             ░░░░░░░░░░░░░░░░░░░░░░░░░░░\n\n";
 
     std::cout << "──────────────────────────────────────────────────\n";
     std::cout << "         Спасибо за игру! Press Enter to exit\n";
-    std::cin.get();
+    //std::cin.get();
 }
 
 void Screen::drawMenu() {
