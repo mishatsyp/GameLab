@@ -9,6 +9,7 @@
 #include "Entity.h"
 #include "Player.h"
 #include <memory>
+#include <map>
 #include "Random.h"
 
 /**
@@ -19,7 +20,8 @@ private:
     std::string description;      // Описание того, что случилось
     std::vector<std::string> outcomes; // Варианты действий (2-3 варианта)
     int healthEffect;             // Влияние на здоровье (может быть отрицательным)
-    std::string itemReward;       // Предмет, который можно получить (если есть)
+    std::vector<std::map<std::string, int>> rewards;
+    std::string ItemReward;
     bool isCompleted;             // Завершено ли событие
     std::unique_ptr<Monster> monster;
 public:

@@ -39,9 +39,6 @@ public:
     const std::string& getName() const { return name; }
     int getHealth() const { return health; }
     // int getMaxHealth() const { return maxHealth; }
-    // int getAttackPower() const { return attack; }
-    // int getDefense() const { return defense; }
-
     // Сеттеры
     void setHealth(int hp) { health = hp; }
 };
@@ -83,7 +80,8 @@ public:
     // Реализация виртуальных методов
     virtual void takeDamage(int amount) override;
     virtual void monsterAttack(Entity& target);
-    // virtual std::string getDescription() const override;
+    virtual int getAttackPower() const  { return attack; }
+    virtual int getDefense() const { return defense; }
     virtual bool isAlive() const override;
 
     // Статические constexpr методы для характеристик монстров

@@ -39,7 +39,7 @@ void Event::generateRandomEvent(int level, Player& p) {
         };
         auto optItem = rng.getRandomElement(possibleItems);
         if (optItem.has_value()) {
-            itemReward = optItem.value();
+            ItemReward = optItem.value();
         }
     }
 }
@@ -179,39 +179,143 @@ std::string Event::handleBattle(Player& player) {
     }
 
     std::string result;
+    Random& rng = Random::getInstance();
 
     result += "\n═══════════════════════════════════════════════════════════\n";
     result += "                      БОЙ С МОНСТРОМ!\n";
     result += "═══════════════════════════════════════════════════════════\n\n";
-    result += "Ваш противник: " + monster->getName() + "\n";
-    result += "Здоровье противника: " + std::to_string(monster->getHealth()) + "\n";
-    result += "Ваш урон: " + std::to_string(player.getDamage()) + "\n\n";
 
-    // Сравниваем урон игрока со здоровьем монстра
-    if (player.getDamage() >= monster->getHealth()) {
-        // Игрок побеждает
-        result += "Вы мощно атакуете и побеждаете " + monster->getName() + "а одним ударом! ️\n";
-        result += "Вы выходите победителем из схватки!\n";
-        // Монстр побежден, ничего не выпадает
-    } else {
-        // Игрок проигрывает
-        int damageTaken = player.getDamage();
-        player.setHealth(player.getHealth() - damageTaken);
+    bool playerTurn = true;  // игрок ходит первым
+    bool battleActive = true;
 
-        result += monster->getName() + " оказался слишком сильным!\n";
-        result += "Он наносит вам " + std::to_string(damageTaken) + " урона!\n";
+    while (battleActive) {
+        // Показываем статус
+        result += "\n──────────────────────────────────────────────────\n";
+        result += "Ваше здоровье: " + std::to_string(player.getHealth()) + "\n";
+        result += "Здоровье " + monster->getName() + ": " + std::to_string(monster->getHealth()) + "\n";
 
-        if (player.getHealth() <= 0) {
-            result += "\nВы погибли в бою...\n";
-            player.setHealth(0);
-        } else {
-            result += "У вас осталось " + std::to_string(player.getHealth()) + " здоровья.\n";
-            result += "Вы едва смогли убежать, оставляя монстра позади.\n";
+        if (playerTurn) {
+            // Ход игрока
+            result += "\nВаш ход. Выберите действие:\n";
+            result += "1. Атаковать\n";
+            result += "2. Защищаться (уменьшает урон, но тратит прочность оружия)\n";
+
+            int choice;
+            std::cout << result;  // выводим на экран
+            result.clear();        // очищаем для следующего хода
+            std::cout << "Ваш выбор: ";
+            std::cin >> choice;
+
+            if (choice == 1) { // Атака
+                // Шанс попадания 80%
+                if (rng.getBool(0.8)) {
+                    int damage = player.getDamage();
+                    monster->setHealth(monster->getHealth() - damage);
+                    result += "Вы наносите " + std::to_string(damage) + " урона!\n";
+
+                    // Уменьшаем прочность оружия при атаке
+                    if (player.getEquippedWeapon()) {
+                        player.getEquippedWeapon()->reduceDurability(2);
+                        if (player.getEquippedWeapon()->isBroken()) {
+                            result += "⚔️ Ваше оружие сломалось!\n";
+                        }
+                    }
+                } else {
+                    result += "Вы промахнулись!\n";
+                }
+            }
+            else if (choice == 2) { // Защита
+                result += "Вы встаете в защитную стойку!\n";
+                player.setDefending(true);
+
+                // Уменьшаем прочность оружия при защите
+                if (player.getEquippedWeapon()) {
+                    player.getEquippedWeapon()->reduceDurability(1);
+                    if (player.getEquippedWeapon()->isBroken()) {
+                        result += "⚔️ Ваше оружие сломалось!\n";
+                    }
+                }
+            }
+
+            // Проверка на смерть монстра
+            if (monster->getHealth() <= 0) {
+                result += "\n═══════════════════════════════════════════════════════════\n";
+                result += "🏆 ВЫ ПОБЕДИЛИ! 🏆\n";
+                result += monster->getName() + " повержен!\n";
+
+                // Шанс получить трофей
+                if (rng.getBool(0.3)) {
+                    result += "Из монстра выпал трофей: ";
+                    int itemType = rng.getInt(0, 2);
+                    if (itemType == 0) {
+                        player.addItem(std::make_unique<Potion>("Зелье здоровья", 20, 1));
+                        result += "Зелье здоровья!";
+                    } else if (itemType == 1) {
+                        player.addItem(std::make_unique<Weapon>("Коготь монстра", 8, 50));
+                        result += "Коготь монстра!";
+                    } else {
+                        player.addItem(std::make_unique<Armor>("Шкура монстра", 4, 50));
+                        result += "Шкура монстра!";
+                    }
+                    result += "\n";
+                }
+
+                battleActive = false;
+                break;
+            }
+
+            playerTurn = false;  // передаем ход монстру
         }
+        else {
+            // Ход монстра
+            result += "\nХод " + monster->getName() + "!\n";
+
+            // Шанс попадания монстра 70%
+            if (rng.getBool(0.7)) {
+                int damage = monster->getAttackPower();
+
+                // Если игрок защищался, урон уменьшается вдвое
+                if (player.GetisDefending()) {
+                    damage /= 2;
+                    if (damage < 1) damage = 1;
+                    result += monster->getName() + " атакует, но ваша защита ослабляет удар!\n";
+                }
+
+                player.setHealth(player.getHealth() - damage);
+                result += monster->getName() + " наносит " + std::to_string(damage) + " урона!\n";
+
+                // Уменьшаем прочность брони при получении урона
+                if (player.getEquippedArmor()) {
+                    player.getEquippedArmor()->reduceDurability(1);
+                    if (player.getEquippedArmor()->isBroken()) {
+                        result += "🛡️ Ваша броня разрушилась!\n";
+                    }
+                }
+            } else {
+                result += monster->getName() + " промахнулся!\n";
+            }
+
+            // Сбрасываем защиту игрока
+            player.setDefending(false);
+
+            // Проверка на смерть игрока
+            if (player.getHealth() <= 0) {
+                result += "\n═══════════════════════════════════════════════════════════\n";
+                result += "💀 ВЫ ПОГИБЛИ... 💀\n";
+                result += "Монстр оказался сильнее.\n";
+                player.setHealth(0);
+                battleActive = false;
+                break;
+            }
+
+            playerTurn = true;  // передаем ход игроку
+        }
+
+        // Добавляем разделитель между ходами
+        result += "──────────────────────────────────────────────────\n";
     }
 
     result += "\n═══════════════════════════════════════════════════════════\n";
-
     return result;
 }
 
@@ -331,7 +435,6 @@ std::string Event::makeChoice(int choice, Player& player) {
         } else { // Избежать битвы
             result = avoidBattle(player);
         }
-
         isCompleted = true;
         return result;
     }
@@ -349,7 +452,7 @@ std::string Event::makeChoice(int choice, Player& player) {
             if (rng.getBool(0.6)) {
                 // Хороший исход
                 choiceHealth = rng.getInt(5, 15);
-                if (rng.getBool(0.3) && itemReward.empty()) {
+                if (rng.getBool(0.3) && ItemReward.empty()) {
                     choiceItem = "Малое зелье здоровья";
                 }
                 result += "Вам повезло! ";
@@ -364,8 +467,8 @@ std::string Event::makeChoice(int choice, Player& player) {
             result = "Вы решили " + outcomes[1] + ". ";
             if (rng.getBool(0.5)) {
                 choiceHealth = rng.getInt(-5, 10);
-                if (rng.getBool(0.2) && !itemReward.empty()) {
-                    choiceItem = itemReward;
+                if (rng.getBool(0.2) && !ItemReward.empty()) {
+                    choiceItem = ItemReward;
                 }
                 result += "Ничего особенного. ";
             } else {
