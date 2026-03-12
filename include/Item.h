@@ -6,6 +6,7 @@
 #include <memory>
 #include <iostream>
 #include "Player.h"
+#include "Item.h"
 
 class Player;
 
@@ -13,6 +14,7 @@ class Item {
 protected:
     std::string name;
     int durability;
+
 public:
     Item(const std::string& itemName, int dur);
     virtual ~Item() = default;
@@ -55,14 +57,11 @@ public:
 
     virtual void use(Player& player) override;
     virtual std::string getStats() const override; //возвращает урон меча
-    // virtual std::string getItemType() const override;//тип пред
-    // virtual std::unique_ptr<Item> clone() const override;
-    // bool isBroken() const {if };
     void reduceDurability(int amount = 5);
     int getDamage() const { return damage; }
     int getItemDurability() const override;
     std::string getItemType() const override;
-    // int getMaxDurability() const { return MAX_DURABILITY; }
+    bool isBroken() const { return durability <= 0; }
 };
 
 
@@ -84,7 +83,7 @@ public:
     void reduceDurability(int amount = 5);
     int getDefense() const { return defense; }
     int getDurability() const { return durability; }
-    // int getMaxDurability() const { return MAX_DURABILITY; }
+    bool isBroken() const { return durability <= 0; }
 };
 
 #endif

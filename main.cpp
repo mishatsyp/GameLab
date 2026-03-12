@@ -8,7 +8,7 @@ int main() {
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
-    system("chcp 65001 > nul");  // принудительно UTF-8
+    system("chcp 65001 > nul");  
 #endif
     GameEngine game_engine;
     game_engine.initialize();

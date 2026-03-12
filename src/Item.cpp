@@ -28,10 +28,6 @@ Weapon::Weapon(const std::string& weaponName, int damage) : Item(weaponName, 100
 
 Weapon::Weapon(const std::string& weaponName, int damage, int dur) : Item(weaponName, dur), damage(damage) {}
 
-void Weapon::use(Player& player) {
-    std::cout << "Вы экипировали " << name << " (урон +" << damage << ")\n";
-    // Здесь можно добавить логику экипировки
-}
 std::string Weapon::getStats() const {
     return "Урон: +" + std::to_string(damage) + " | Прочность: " + std::to_string(durability) + "/100";
 }
@@ -59,10 +55,6 @@ Armor::Armor(int defense) : Item("Броня", 100), defense(defense) {}
 Armor::Armor(const std::string& armorName, int def, int dur)
     : Item(armorName, dur), defense(def) {}
 
-void Armor::use(Player& player) {
-    std::cout << "Вы надели " << name << " (защита +" << defense << ")\n";
-    // Здесь можно добавить логику экипировки
-}
 
 std::string Armor::getStats() const {
     return "Защита: +" + std::to_string(defense) + " | Прочность: " + std::to_string(durability) + "/100";
@@ -82,4 +74,13 @@ void Armor::reduceDurability(int amount) {
     if (durability == 0) {
         std::cout << name << " разрушена!\n";
     }
+}
+
+void Weapon::use(Player& player) {
+    player.equipWeapon(std::make_unique<Weapon>(*this));  // экипируем копию
+    std::cout << "Вы экипировали " << name << " (урон +" << damage << ")\n";
+}
+void Armor::use(Player& player) {
+    std::cout << "Вы надели " << name << " (защита +" << defense << ")\n";
+    player.equipArmor(std::make_unique<Armor>(*this));  // экипируем копию
 }

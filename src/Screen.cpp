@@ -11,9 +11,6 @@
     // static constexpr char PLAYER_SYMBOL = '@';
 
     void Screen::clearScreen() {}
-    static void drawDungeonMap(const Dungeon& dungeon, const Player& player){} //Отрисовка карты подземелья
-    static void drawCurrentRoomInfo(const Dungeon& dungeon); //Отрисовка информации о текущей комнате
-
      void Screen::drawInventory(const Player& player) {
         char EMPTY_SLOT = ' ';
         char WEAPON_SYM = 'S';  // меч
