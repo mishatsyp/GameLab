@@ -9,9 +9,7 @@ GameEngine::~GameEngine() {}
 
 GameEngine::GameEngine()
     : isRunning(false)
-    , currentLevel(1)
-    , gameStartTime(Clock::now()) {
-}
+    , currentLevel(1) {}
 
 void GameEngine::menu() {
     Screen screen;
@@ -130,13 +128,19 @@ bool GameEngine::initialize() {
 
                     if (currentDungeon->getCell(newX, newY) == 1 || currentDungeon->getCell(newX, newY) == 2) {
                         switch (direction) {
-                            case 'w': currentDungeon->moveUp(); break;
-                            case 's': currentDungeon->moveDown(); break;
-                            case 'a': currentDungeon->moveLeft(); break;
-                            case 'd': currentDungeon->moveRight(); break;
+                            case 'w': currentDungeon->moveUp();
+                                std::cout << "Вы перешли в другую комнату.\n";
+                                break;
+                            case 's': currentDungeon->moveDown();
+                                std::cout << "Вы перешли в другую комнату.\n";
+                                break;
+                            case 'a': currentDungeon->moveLeft();
+                                std::cout << "Вы перешли в другую комнату.\n";
+                                break;
+                            case 'd': currentDungeon->moveRight();
+                                std::cout << "Вы перешли в другую комнату.\n";
+                                break;
                         }
-
-                        std::cout << "Вы перешли в другую комнату.\n";
 
                         if (currentDungeon->getCell(newX, newY) == 2) {
                             if (player->getCheckedRooms() >= 5) {
