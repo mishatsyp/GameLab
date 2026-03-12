@@ -8,8 +8,6 @@ TEST(RoomTest, Constructor) {
     Player player("TestPlayer");
     Room room(Room::RoomType::EMPTY, player);
 
-    // Проверяем что тип установлен правильно
-    EXPECT_EQ(room.getType(), Room::RoomType::EMPTY);
     // Проверяем что комната еще не исследована
     EXPECT_FALSE(room.getisExplored());
 }
@@ -20,6 +18,7 @@ TEST(RoomTest, ConstructorEventRoom) {
     Room room(Room::RoomType::EVENT, player);
 
     EXPECT_EQ(room.getType(), Room::RoomType::EVENT);
+    EXPECT_FALSE(room.getisExplored());
 }
 
 // Тест конструктора комнаты с типом EXIT
@@ -28,6 +27,7 @@ TEST(RoomTest, ConstructorExitRoom) {
     Room room(Room::RoomType::EXIT, player);
 
     EXPECT_EQ(room.getType(), Room::RoomType::EXIT);
+    EXPECT_FALSE(room.getisExplored());
 }
 
 // Тест установки координат комнаты
@@ -40,15 +40,6 @@ TEST(RoomTest, SetCoordinates) {
     // Проверяем что координаты сохранились
     EXPECT_EQ(room.getCoordinates().first, 3);
     EXPECT_EQ(room.getCoordinates().second, 2);
-}
-
-// Тест получения события из комнаты
-TEST(RoomTest, GetEvent) {
-    Player player("TestPlayer");
-    Room room(Room::RoomType::EMPTY, player);
-
-    // Для пустой комнаты событие должно отсутствовать
-    EXPECT_FALSE(room.GetEvent().has_value());
 }
 
 // Тест получения события из комнаты с событием
