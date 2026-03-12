@@ -38,7 +38,7 @@ std::optional<std::shared_ptr<Item>> Player::getItem(size_t itemIndex) const {
 }
 
 int Player::getHealth() const {return health;}
-void Player::setHealth(int h) {health = h;}
+void Player::setHealth(int h) {health = (h < 0) ? 0 : h;}
 int Player::getDamage() const {return damage;}
 void Player::setDamage(int d) {damage = d;}
 int Player::getLevel() const {return level;}
