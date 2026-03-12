@@ -56,7 +56,7 @@ TEST(RoomTest, GetEventFromEventRoom) {
 // Тест конструктора перемещения
 TEST(RoomTest, MoveConstructor) {
     Player player("TestPlayer");
-    Room original(Room::RoomType::EMPTY, player);
+    Room original(Room::RoomType::EVENT, player);
     original.setCoordinates(1, 2); // Задаем координаты исходной комнате
 
     Room moved = std::move(original); // Перемещаем комнату
@@ -65,7 +65,7 @@ TEST(RoomTest, MoveConstructor) {
     EXPECT_EQ(moved.getCoordinates().first, 1);
     EXPECT_EQ(moved.getCoordinates().second, 2);
     // Проверяем что тип сохранился
-    EXPECT_EQ(moved.getType(), Room::RoomType::EMPTY);
+    EXPECT_EQ(moved.getType(), Room::RoomType::EVENT);
 }
 
 // Тест оператора перемещения
