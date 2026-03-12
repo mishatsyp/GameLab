@@ -7,17 +7,25 @@
 #include <chrono>
 #include <vector>
 #include <functional>
-// #include "Player.h"
-// #include "Dungeon.h"
 #include "Screen.h"
+#include <variant>
+#include <string>
+
+
 
 class Player;
 class Dungeon;
 
-class Dungeon;
-/**
- * @brief Центральный класс движка игры
- */
+struct NextLevelSuccess {
+    int newLevel;
+};
+
+struct NextLevelError {
+    std::string reason;
+};
+
+using NextLevelResult = std::variant<NextLevelSuccess, NextLevelError>;
+
 class GameEngine {
 private:
     std::unique_ptr<Player> player;
@@ -33,49 +41,18 @@ private:
 public:
     GameEngine();
     ~GameEngine();
-    
-    // Запрещаем копирование
+
     GameEngine(const GameEngine&) = delete;
     GameEngine& operator=(const GameEngine&) = delete;
-    
-    // Разрешаем перемещение
+
     GameEngine(GameEngine&&) noexcept = default;
     GameEngine& operator=(GameEngine&&) noexcept = default;
-    
-    /**
-     * @brief Вызов меню игры
-     */
+
     void menu();
-    //вызывай метод из скрина меню
+
     bool initialize();
-    
-    // /**
-    //  * @brief Обработка ввода игрока
-    //  * @return std::optional<char> - введенная команда
-    //  */
-    // std::optional<char> processInput();
 
-    // /**
-    //  * @brief Обработка текущей комнаты
-    //  */
-    // void handleCurrentRoom(); // добавить аргумент dungeon?
-
-    /**
-     * @brief Обработка боя
-     */
-    // void handleBattle(Player& p);
-    
-    /**
-     * @brief Переход на следующий уровень подземелья
-     */
-    void nextLevel();
-    
-    // /**
-    //  * @brief Отрисовка текущего состояния
-    //  */
-    // void render() const;
-    //
-    // Исключение для движка
+    NextLevelResult nextLevel();
 
     class GameException : public std::runtime_error {
     public:

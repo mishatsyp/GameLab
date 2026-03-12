@@ -189,17 +189,15 @@ bool GameEngine::initialize() {
 //     .handleBattle(p);
 // }
 
-void GameEngine::nextLevel() {
-    Screen screen;
-    player->setLevel(player->getLevel()+1);
-    player->setCheckedRooms(0);
+NextLevelResult GameEngine::nextLevel() {
     if (!currentDungeon) {
-        throw GameException("Данж не инициализирован");
+        return NextLevelError{"Данж не инициализирован"};
     }
 
+    player->setLevel(player->getLevel() + 1);
+    player->setCheckedRooms(0);
     currentLevel++;
-    // Screen::drawMessage("ПЕРЕХОД НА УРОВЕНЬ ");
+    currentDungeon = std::make_unique<Dungeon>(*player);
 
-    // Создаем новый уровень подземелья
-    currentDungeon = std::make_unique<Dungeon>(*player); // обработка нового уровня (а может ну его?)
+    return NextLevelSuccess{currentLevel};
 }

@@ -9,6 +9,13 @@ Room::Room(RoomType roomType, Player& p) : type(roomType), isExplored(false) {
     generateRoomContent(p);
 }
 
+std::optional<Event*> Room::GetEvent() const {
+    if (roomEvent) {
+        return roomEvent.get();
+    }
+    return std::nullopt;
+}
+
 void Room::generateRoomContent(Player& p) {
     Random& rng = Random::getInstance();
     // Если тип не задан (EMPTY), рандомно выбираем между EMPTY и EVENT
