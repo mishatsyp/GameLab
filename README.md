@@ -1,4 +1,4 @@
-# [Name]
+# Dungeon Crawler
 
 ## Project review
 A console RPG game in the Dungeon Crawler genre,
@@ -7,14 +7,14 @@ moves to new levels. The project was developed in C++23 with
 using modern language features and an object-oriented approach.
 
 ## Developers
-- [Michael] - classes Player, GameEngine
-- [Suzanne] - classes Room, Dungeon
-- [Lubov'] - classes Event, Random, Entity
-- [Leonid] - classes Item, Screen
+- Michael - classes Player, GameEngine
+- Suzanne - classes Room, Dungeon
+- Lubov' - classes Event, Random, Entity
+- Leonid - classes Item, Screen
 
 ## Technologies
 - **Language**: C++23
-- **Build**: CMake 3.20+
+- **Build**: CMake 4.00+
 - **Test**: Google Test
 - **Version control**: Git (GitHub)
 

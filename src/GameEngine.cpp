@@ -22,7 +22,7 @@ bool GameEngine::initialize() {
     try {
         std::cout << "Инициализация игры..." << std::endl;
 
-        // Создаем игрока
+        // спавним игрока
         std::string playerName;
         std::cout << "Введите имя игрока: ";
         std::getline(std::cin, playerName);
@@ -33,12 +33,11 @@ bool GameEngine::initialize() {
 
         player = std::make_unique<Player>(playerName);
 
-        // Создаем первый уровень подземелья
+        // первый уровень подземелья
         currentDungeon = std::make_unique<Dungeon>(*player);
 
         isRunning = true;
 
-        // Вызываем меню из Screen
         menu();
         int des;
         std::cin>>des;
@@ -53,16 +52,14 @@ bool GameEngine::initialize() {
             Screen::clearScreen();
             switch (choice) {
                 case 1: {
-                    // Получаем текущие координаты
                     int x = currentDungeon->getCurrentX();
                     int y = currentDungeon->getCurrentY();
 
-                    // Получаем комнату по координатам
                     Room* currentRoom = currentDungeon->getRoomAt(x, y);
 
                     if (currentRoom){
-                        currentRoom->look(*player);  // просто вызываем look
-                        if (currentRoom->getisExplored()) {  // если комната стала исследованной
+                        currentRoom->look(*player);  // осматриваем комнату
+                        if (currentRoom->getisExplored()) {
                             player->setCheckedRooms(player->getCheckedRooms() + 1);
                         }
                     }
@@ -79,17 +76,15 @@ bool GameEngine::initialize() {
 
                     if (command == 'u') {
                         std::cin >> itemIndex;
-                        // Индексация предметов с 1 для удобства пользователя
                         int inventorySize = player->getInventorySize();
 
                         if (itemIndex >= 1 && itemIndex <= inventorySize) {
-                            // Получаем предмет по индексу (конвертируем в 0-базовый индекс)
                             auto itemOpt = player->getItem(itemIndex - 1);
                             if (itemOpt.has_value()) {
                                 auto item = itemOpt.value();
                                 item->use(*player);
 
-                                // Проверка на прочность
+                                // прочность айтема
                                 if (item->getItemDurability() <= 0) {
                                     std::cout << "Предмет сломался и удален из инвентаря.\n";
                                     player->removeItem(itemIndex - 1);
@@ -101,7 +96,6 @@ bool GameEngine::initialize() {
                             std::cout << "Неверный номер предмета! У вас " << inventorySize << " предметов.\n";
                         }
                     } else if (command == 'b' || command == 'B') {
-                        // Просто выходим из инвентаря
                         std::cout << "Возврат к основным действиям.\n";
                     } else {
                         std::cout << "Неверная команда!\n";
@@ -144,7 +138,6 @@ bool GameEngine::initialize() {
 
                         std::cout << "Вы перешли в другую комнату.\n";
 
-                        // Проверка на выход
                         if (currentDungeon->getCell(newX, newY) == 2) {
                             if (player->getCheckedRooms() >= 5) {
                                 Screen::drawMessage("Вы нашли выход на следующий уровень!");
@@ -154,7 +147,7 @@ bool GameEngine::initialize() {
                             }
                         }
 
-                        // Пауза перед возвратом в меню
+                        // пауза во избежания бага
                         Screen::drawMessage("Нажмите Enter чтобы продолжить...");
                         std::cin.get();
                         Screen::clearScreen();

@@ -19,7 +19,7 @@
         char ARMOR_SYM = 'A';   // броня (можно заменить на '◆' если не поддерживается)
         std::cout << "\n";
         std::cout << "╔══════════════════════════════════════════════════════════╗\n";
-        std::cout << "║                        ИНВЕНТАРЬ                        ║\n";
+        std::cout << "║                        ИНВЕНТАРЬ                         ║\n";
         std::cout << "╚══════════════════════════════════════════════════════════╝\n\n";
 
         // Верхняя рамка инвентаря
@@ -107,10 +107,10 @@ void Screen::drawGameOver() {
     std::cout << "──────────────────────────────────────────────────\n\n";
 
     std::cout << "             ░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
-    std::cout << "             ░   Leonid Vorobiev     ░\n";
-    std::cout << "             ░   Suzi Tymanian       ░\n";
-    std::cout << "             ░   Lubov Istomina      ░\n";
-    std::cout << "             ░   Michael Tsypchenko  ░\n";
+    std::cout << "             ░   Leonid Vorobiev       ░\n";
+    std::cout << "             ░   Suzi Tymanian         ░\n";
+    std::cout << "             ░   Lubov Istomina        ░\n";
+    std::cout << "             ░   Michael Tsypchenko    ░\n";
     std::cout << "             ░░░░░░░░░░░░░░░░░░░░░░░░░░░\n\n";
 
     std::cout << "──────────────────────────────────────────────────\n";
@@ -125,11 +125,11 @@ void Screen::drawMenu() {
         std::cout << "║                   DUNGEON CRAWLER                        ║\n";
         std::cout << "╚══════════════════════════════════════════════════════════╝\n\n";
         std::cout << "                 ░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
-        std::cout << "                 ░      DUNGEON CRAWLER   ░\n";
+        std::cout << "                 ░      DUNGEON CRAWLER    ░\n";
         std::cout << "                 ░░░░░░░░░░░░░░░░░░░░░░░░░░░\n\n";
         std::cout << "                    ╔════════════════╗\n";
-        std::cout << "                    ║  1. НОВАЯ ИГРА  ║\n";
-        std::cout << "                    ║  2. ВЫХОД       ║\n";
+        std::cout << "                    ║  1. НОВАЯ ИГРА ║\n";
+        std::cout << "                    ║  2. ВЫХОД      ║\n";
         std::cout << "                    ╚════════════════╝\n\n";
         std::cout << "──────────────────────────────────────────────────\n";
         std::cout << "  Введите 1 или 2: ";
@@ -176,7 +176,7 @@ static void drawDungeonMap(const Dungeon& dungeon);
 void Screen::drawDungeonMap(const Dungeon& dungeon) {
     std::cout << "\n";
     std::cout << "╔══════════════════════════════════════════════════════════╗\n";
-    std::cout << "║                      КАРТА ПОДЗЕМЕЛЬЯ                   ║\n";
+    std::cout << "║                      КАРТА ПОДЗЕМЕЛЬЯ                    ║\n";
     std::cout << "╚══════════════════════════════════════════════════════════╝\n\n";
 
     // Получаем размеры матрицы

@@ -34,9 +34,9 @@ private:
     int currentLevel;
     
     // Для замера времени (требование из ТЗ)
-    using Clock = std::chrono::high_resolution_clock;
-    using TimePoint = std::chrono::time_point<Clock>;
-    TimePoint gameStartTime;
+    // using Clock = std::chrono::high_resolution_clock;
+    // using TimePoint = std::chrono::time_point<Clock>;
+    // TimePoint gameStartTime;
     
 public:
     GameEngine();
