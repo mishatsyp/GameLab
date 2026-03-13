@@ -38,7 +38,7 @@ public:
 
     void attack(Entity& target);
 
-    bool addItem(std::unique_ptr<Item> item);
+    bool addItem(std::shared_ptr<Item> item);
     bool useItem(size_t itemIndex);
     std::optional<std::shared_ptr<Item>> getItem(size_t itemIndex) const;
     void removeItem(size_t index);
@@ -65,6 +65,8 @@ public:
 
     int getTotalDamage() const;
     int getTotalDefense() const;
+    void unequipWeapon();
+    void unequipArmor();
 };
 
 #endif // PLAYER_H

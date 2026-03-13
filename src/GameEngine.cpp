@@ -66,7 +66,7 @@ bool GameEngine::initialize() {
 
                 case 2:
                     player->showInventory();
-                    std::cout << "\nКоманды: u [номер] - использовать, d [номер] - выбросить, b - назад\n";
+                    std::cout << "\nКоманды: u [номер] - использовать, d [номер] - выбросить, b - назад, e - снять экипировку\n";
 
                     char command;
                     int itemIndex;
@@ -80,20 +80,73 @@ bool GameEngine::initialize() {
                             auto itemOpt = player->getItem(itemIndex - 1);
                             if (itemOpt.has_value()) {
                                 auto item = itemOpt.value();
-                                item->use(*player);
 
-                                // прочность айтема
-                                if (item->getItemDurability() <= 0) {
-                                    std::cout << "Предмет сломался и удален из инвентаря.\n";
-                                    player->removeItem(itemIndex - 1);
+                                // Только зелья используются и удаляются
+                                if (item->getItemType() == "Potion") {
+                                    item->use(*player);
+                                    std::cout << "Предмет \"" << item->getName() << "\" использован.\n";
+
+                                    // Зелья удаляются после использования
+                                    if (item->getItemDurability() <= 0) {
+                                        std::cout << "Зелье закончилось и удалено из инвентаря.\n";
+                                        player->removeItem(itemIndex - 1);
+                                    }
                                 }
-                            } else {
-                                std::cout << "Ошибка: предмет не найден!\n";
+                                // Оружие и броня - экипируются, но НЕ удаляются
+                                else if (item->getItemType() == "Weapon") {
+                                    auto weapon = std::dynamic_pointer_cast<Weapon>(item);
+                                    if (weapon) {
+                                        // Удаляем из инвентаря и экипируем
+                                        player->equipWeapon(weapon);
+                                        player->removeItem(itemIndex - 1);  // убираем из инвентаря, но не удаляем предмет
+                                        std::cout << "Вы экипировали " << weapon->getName()
+                                                  << " (урон +" << weapon->getDamage() << ")\n";
+                                    }
+                                }
+                                else if (item->getItemType() == "Armor") {
+                                    auto armor = std::dynamic_pointer_cast<Armor>(item);
+                                    if (armor) {
+                                        player->equipArmor(armor);
+                                        player->removeItem(itemIndex - 1);
+                                        std::cout << "Вы надели " << armor->getName()
+                                                  << " (защита +" << armor->getDefense() << ")\n";
+                                    }
+                                }
+                                else if (command == 'e') {
+                                    // Снимаем экипировку
+                                    std::cout << "\nЧто снять?\n";
+                                    std::cout << "1. Оружие ("
+                                              << (player->getEquippedWeapon() ? player->getEquippedWeapon()->getName() : "пусто")
+                                              << ")\n";
+                                    std::cout << "2. Броню ("
+                                              << (player->getEquippedArmor() ? player->getEquippedArmor()->getName() : "пусто")
+                                              << ")\n";
+                                    std::cout << "Ваш выбор: ";
+
+                                    int equipChoice;
+                                    std::cin >> equipChoice;
+
+                                    if (equipChoice == 1) {
+                                        if (player->getEquippedWeapon()) {
+                                            player->unequipWeapon();
+                                            std::cout << "Оружие снято и возвращено в инвентарь.\n";
+                                        } else {
+                                            std::cout << "Нет экипированного оружия.\n";
+                                        }
+                                    }
+                                    else if (equipChoice == 2) {
+                                        if (player->getEquippedArmor()) {
+                                            player->unequipArmor();
+                                            std::cout << "Броня снята и возвращена в инвентарь.\n";
+                                        } else {
+                                            std::cout << "Нет экипированной брони.\n";
+                                        }
+                                    }
+                                }
                             }
-                        } else {
-                            std::cout << "Неверный номер предмета! У вас " << inventorySize << " предметов.\n";
                         }
-                    } else if (command == 'b' || command == 'B') {
+                    }
+                    else if (command == 'b' || command == 'B') {
                         std::cout << "Возврат к основным действиям.\n";
                     } else if (command == 'd' || command == 'D') {
                         std::cin >> itemIndex;

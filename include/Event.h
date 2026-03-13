@@ -12,9 +12,6 @@
 #include <map>
 #include "Random.h"
 
-/**
- * @brief Класс события - просто текстовое событие с последствиями
- */
 class Event {
 private:
     std::string description;      // Описание того, что случилось
@@ -24,6 +21,12 @@ private:
     std::string ItemReward;
     bool isCompleted;             // Завершено ли событие
     std::unique_ptr<Monster> monster;
+    std::vector<std::string> goodMessages;
+    std::vector<std::string> badMessages;
+    std::vector<int> goodHeal;
+    std::vector<int> badDamage;
+    std::vector<int> itemChance;
+    std::vector<std::string> itemType;
 public:
     Event();
     /**

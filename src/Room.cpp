@@ -22,7 +22,7 @@ void Room::generateRoomContent(Player& p) {
     if (type == RoomType::EMPTY) {
         // 70% шанс на ивент, 30% на пустую
         int chance = rng.getInt(1, 100);
-        if (chance <= 70) {
+        if (chance <= 80) {
             type = RoomType::EVENT;
         }
     }

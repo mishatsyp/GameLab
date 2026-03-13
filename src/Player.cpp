@@ -8,7 +8,7 @@ Player::Player(const std::string& playerName)
 
 void Player::attack(Entity &target) {target.takeDamage(damage);}
 
-bool Player::addItem(std::unique_ptr<Item> item) {
+bool Player::addItem(std::shared_ptr<Item> item) {
     if (inventory.size() < MAX_INVENTORY_SIZE) {
         inventory.push_back(std::move(item));
         return true;
@@ -54,27 +54,17 @@ bool Player::equipWeapon(std::shared_ptr<Weapon> weapon) {
     if (equippedWeapon) {
         inventory.push_back(equippedWeapon);
     }
-    for (size_t i = 0; i < inventory.size(); i++) {
-        if (inventory[i] == weapon) {
-            inventory.erase(inventory.begin() + i);
-            break;
-        }
-    }
     equippedWeapon = weapon;
     return true;
 }
 
 bool Player::equipArmor(std::shared_ptr<Armor> armor) {
     if (!armor) return false;
+
     if (equippedArmor) {
         inventory.push_back(equippedArmor);
     }
-    for (size_t i = 0; i < inventory.size(); i++) {
-        if (inventory[i] == armor) {
-            inventory.erase(inventory.begin() + i);
-            break;
-        }
-    }
+
     equippedArmor = armor;
     return true;
 }
@@ -99,5 +89,18 @@ void Player::setDefending(bool defending) {
     isDefending = defending;
 }
 
+void Player::unequipWeapon() {
+    if (equippedWeapon) {
+        inventory.push_back(equippedWeapon);
+        equippedWeapon = nullptr;
+    }
+}
+
+void Player::unequipArmor() {
+    if (equippedArmor) {
+        inventory.push_back(equippedArmor);
+        equippedArmor = nullptr;
+    }
+}
 
 bool Player::GetisDefending() const {return  isDefending;}

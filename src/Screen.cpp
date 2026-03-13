@@ -13,65 +13,112 @@
     void Screen::clearScreen() {}
 
      void Screen::drawInventory(const Player& player) {
-        char EMPTY_SLOT = ' ';
-        char WEAPON_SYM = 'S';  // меч
-        char POTION_SYM = 'P'; // зелье (можно заменить на '▲' если не поддерживается)
-        char ARMOR_SYM = 'A';   // броня (можно заменить на '◆' если не поддерживается)
-        std::cout << "\n";
-        std::cout << "╔══════════════════════════════════════════════════════════╗\n";
-        std::cout << "║                        ИНВЕНТАРЬ                         ║\n";
-        std::cout << "╚══════════════════════════════════════════════════════════╝\n\n";
+    char EMPTY_SLOT = ' ';
+    char WEAPON_SYM = 'W';  // меч
+    char ARMOR_SYM = 'A';   // броня
+    char POTION_SYM = 'P';  // зелье
 
-        // Верхняя рамка инвентаря
-        std::cout << "┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┐\n";
+    std::cout << "\n";
+    std::cout << "╔══════════════════════════════════════════════════════════╗\n";
+    std::cout << "║                        ИНВЕНТАРЬ                        ║\n";
+    std::cout << "╚══════════════════════════════════════════════════════════╝\n\n";
 
-        // Строка с иконками предметов
-        std::cout << "│";
-        if (player.getInventorySize() > 0) {
-            std::cout << "Предметы:\n";
-            for (int i = 0; i < player.getInventorySize(); i++) {
-                auto itemOpt = player.getItem(i);
-                if (itemOpt.has_value()) {
-                    auto item = itemOpt.value();  // item теперь shared_ptr<Item>
-                    std::cout << "  " << (i+1) << ". " << item->getName() << "\n";
+    // ЭКИПИРОВКА (вверху)
+    std::cout << "⚔️ ЭКИПИРОВАНО:\n";
+    std::cout << "──────────────────────────────────────────────────\n";
+
+    // Оружие
+    auto weapon = player.getEquippedWeapon();
+    if (weapon) {
+        std::cout << "⚔ Оружие: " << weapon->getName()
+                  << " (урон +" << weapon->getDamage()
+                  << ", прочность " << weapon->getItemDurability() << ")\n";
+    } else {
+        std::cout << "⚔ Оружие: пусто\n";
+    }
+
+    // Броня
+    auto armor = player.getEquippedArmor();
+    if (armor) {
+        std::cout << "🛡 Броня:  " << armor->getName()
+                  << " (защита +" << armor->getDefense()
+                  << ", прочность " << armor->getItemDurability() << ")\n";
+    } else {
+        std::cout << "🛡 Броня:  пусто\n";
+    }
+
+    std::cout << "\n";
+
+    // ИНВЕНТАРЬ
+    std::cout << "📦 ИНВЕНТАРЬ:\n";
+    std::cout << "──────────────────────────────────────────────────\n";
+
+    // Верхняя рамка
+    std::cout << "┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┐\n";
+
+    // Строка с иконками
+    std::cout << "│";
+    for (int i = 0; i < 8; i++) {
+        if (i < player.getInventorySize()) {
+            auto itemOpt = player.getItem(i);
+            if (itemOpt.has_value()) {
+                auto item = itemOpt.value();
+                char sym = EMPTY_SLOT;
+                if (item->getItemType() == "Weapon") sym = WEAPON_SYM;
+                else if (item->getItemType() == "Armor") sym = ARMOR_SYM;
+                else if (item->getItemType() == "Potion") sym = POTION_SYM;
+                std::cout << "  " << sym << "  │";
+            } else {
+                std::cout << "  " << EMPTY_SLOT << "  │";
+            }
+        } else {
+            std::cout << "  " << EMPTY_SLOT << "  │";
+        }
+    }
+    std::cout << "\n";
+
+    // Номера слотов
+    std::cout << "├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤\n";
+    std::cout << "│";
+    for (int i = 0; i < 8; i++) {
+        std::cout << "  " << (i+1) << "  │";
+    }
+    std::cout << "\n";
+    std::cout << "└─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┘\n\n";
+
+    // Список предметов в инвентаре
+    if (player.getInventorySize() > 0) {
+        for (int i = 0; i < player.getInventorySize(); i++) {
+            auto itemOpt = player.getItem(i);
+            if (itemOpt.has_value()) {
+                auto item = itemOpt.value();
+                std::cout << "  " << (i+1) << ". " << item->getName();
+
+                if (item->getItemType() == "Weapon") {
+                    auto weapon = std::dynamic_pointer_cast<Weapon>(item);
+                    if (weapon) {
+                        std::cout << " (урон +" << weapon->getDamage()
+                                  << ", пр. " << weapon->getItemDurability() << ")";
+                    }
+                } else if (item->getItemType() == "Armor") {
+                    auto armor = std::dynamic_pointer_cast<Armor>(item);
+                    if (armor) {
+                        std::cout << " (защита +" << armor->getDefense()
+                                  << ", пр. " << armor->getItemDurability() << ")";
+                    }
+                } else if (item->getItemType() == "Potion") {
+                    auto potion = std::dynamic_pointer_cast<Potion>(item);
+                    if (potion) {
+                        std::cout << " (лечит " << potion->getHealAmount() << " HP)";
+                    }
                 }
+                std::cout << "\n";
             }
         }
-        std::cout << "\n";
-
-        // Средняя рамка (разделитель)
-        std::cout << "├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤\n";
-
-        // Строка с номерами слотов
-        std::cout << "│";
-        for (int i = 0; i < 8; i++) {
-            std::cout << "  " << (i+1) << "  │";
-        }
-        std::cout << "\n";
-
-        // Нижняя рамка
-        std::cout << "└─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┘\n\n";
-
-        // Легенда
-        std::cout << "Легенда: " << WEAPON_SYM << " - оружие  "
-                  << POTION_SYM << " - зелье  "
-                  << ARMOR_SYM << " - броня\n\n";
-
-
-        if (player.getInventorySize() > 0) {
-            std::cout << "Предметы:\n";
-            for (int i = 0; i < player.getInventorySize(); i++) {
-                auto itemOpt = player.getItem(i);
-                if (itemOpt.has_value()) {
-                    auto item = itemOpt.value();  // item теперь shared_ptr<Item>
-                    std::cout << "  " << (i+1) << ". " << item->getName() << "\n";
-                }
-            }
-        }else {
-            std::cout << "Инвентарь пуст. Найдите предметы в подземелье!\n";
-        }
-        std::cout << "\n──────────────────────────────────────────────────\n";
-    };
+    } else {
+        std::cout << "  Инвентарь пуст\n";
+    }
+}
 
 void Screen::drawMessage(const std::string& message) {
     std::cout << "\n";
@@ -91,10 +138,6 @@ void Screen::drawMessage(const std::string& message) {
     }
 }
 
-// Screen.h - добавить
-static void drawGameOver();
-
-// Screen.cpp
 void Screen::drawGameOver() {
     clearScreen();
 
@@ -108,7 +151,7 @@ void Screen::drawGameOver() {
 
     std::cout << "             ░░░░░░░░░░░░░░░░░░░░░░░░░░░\n";
     std::cout << "             ░   Leonid Vorobiev       ░\n";
-    std::cout << "             ░   Syuzi Tumanian         ░\n";
+    std::cout << "             ░   Syuzi Tumanian        ░\n";
     std::cout << "             ░   Lubov Istomina        ░\n";
     std::cout << "             ░   Michael Tsypchenko    ░\n";
     std::cout << "             ░░░░░░░░░░░░░░░░░░░░░░░░░░░\n\n";
