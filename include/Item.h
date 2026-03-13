@@ -1,0 +1,83 @@
+#ifndef ITEM_H
+#define ITEM_H
+
+#pragma once
+#include <string>
+#include <iostream>
+#include "Player.h"
+#include "Item.h"
+
+class Player;
+
+class Item {
+protected:
+    std::string name;
+    int durability;
+
+public:
+    Item(const std::string& itemName, int dur);
+    virtual ~Item() = default;
+
+    virtual void use(Player& player) = 0;
+    [[nodiscard]] virtual std::string getStats() const = 0;
+    [[nodiscard]] virtual std::string getItemType() const = 0;
+    [[nodiscard]] virtual int getItemDurability() const=0;
+    [[nodiscard]] const std::string& getName() const { return name; }
+};
+
+
+
+
+
+class Potion : public Item {
+private:
+    int healAmount;
+public:
+    explicit Potion(int heal = 20);
+    Potion(const std::string& potionName, int heal, int dur);
+    void use(Player& player) override;
+    [[nodiscard]] std::string getStats() const override; //сколько раз может отхилить
+    [[nodiscard]] std::string getItemType() const override;
+    [[nodiscard]] int getItemDurability() const override;
+    [[nodiscard]] int getHealAmount() const { return healAmount; } //сколько хилит в целом
+};
+
+class Weapon : public Item {
+private:
+    int damage;
+    static constexpr int MAX_DURABILITY = 100;
+
+public:
+    Weapon(const std::string& weaponName, int damage);
+    Weapon(const std::string& weaponName, int damage, int dur);
+
+    void use(Player& player) override;
+    [[nodiscard]] std::string getStats() const override; //возвращает урон меча
+    void reduceDurability(int amount = 5);
+    [[nodiscard]] int getDamage() const { return damage; }
+    [[nodiscard]] int getItemDurability() const override;
+    [[nodiscard]] std::string getItemType() const override;
+    [[nodiscard]] bool isBroken() const { return durability <= 0; }
+};
+
+
+class Armor : public Item {
+private:
+    int defense;
+    int durability;
+    static constexpr int MAX_DURABILITY = 100;
+
+public:
+    explicit Armor(int bonus = 5);
+    Armor(const std::string& armorName, int defen, int dur);
+    void use(Player& player) override;
+    [[nodiscard]] std::string getStats() const override; // - возвращает durability
+    [[nodiscard]] std::string getItemType() const override;
+    [[nodiscard]] int getItemDurability() const override;
+    void reduceDurability(int amount = 5);
+    [[nodiscard]] int getDefense() const { return defense; }
+    [[nodiscard]] int getDurability() const { return durability; }
+    [[nodiscard]] bool isBroken() const { return durability <= 0; }
+};
+
+#endif
