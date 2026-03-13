@@ -26,7 +26,10 @@ int Potion::getItemDurability() const {
 }
 Weapon::Weapon(const std::string& weaponName, int damage) : Item(weaponName, 100), damage(damage) {}
 
-Weapon::Weapon(const std::string& weaponName, int damage, int dur) : Item(weaponName, dur), damage(damage) {}
+Weapon::Weapon(const std::string& weaponName, int damage, int dur)
+    : Item(weaponName, dur), damage(damage) {
+    if (dur <= 0) durability = 30;
+}
 
 std::string Weapon::getStats() const {
     return "Урон: +" + std::to_string(damage) + " | Прочность: " + std::to_string(durability) + "/100";
@@ -52,8 +55,9 @@ void Weapon::reduceDurability(int amount) {
 
 Armor::Armor(int defense) : Item("Броня", 100), defense(defense) {}
 
-Armor::Armor(const std::string& armorName, int def, int dur)
-    : Item(armorName, dur), defense(def) {}
+Armor::Armor(const std::string& armorName, int def, int dur): Item(armorName, dur), defense(def) {
+    if (dur <= 0) durability = 30;
+}
 
 
 std::string Armor::getStats() const {

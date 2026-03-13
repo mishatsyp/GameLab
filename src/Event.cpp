@@ -76,7 +76,7 @@ void Event::generateMonsterEvent(int level, Player& p) {
     // Добавляем информацию о монстре
     description += "\n\n" + monster->getName() + " имеет " +
                    std::to_string(monster->getHealth()) + " здоровья.\n";
-    description += "Ваш урон: " + std::to_string(p.getDamage());
+    description += "Ваш урон: " + std::to_string(p.getTotalDamage());
     outcomes = {"Вступить в бой", "Попытаться избежать битвы"};
 }
 
@@ -559,10 +559,14 @@ std::string Event::makeChoice(int choice, Player& player) {
                 int type = rng.getInt(0, 2);
                 if (type == 0) {
                     int dmg = rng.getInt(5, 15);
-                    newItem = std::make_shared<Weapon>("Оружие", dmg, 100);
+                    int dur = rng.getInt(30, 100);
+                    if (dur <= 0) dur = 50;
+                    newItem = std::make_shared<Weapon>("Оружие", dmg, dur);
                 } else if (type == 1) {
                     int def = rng.getInt(3, 10);
-                    newItem = std::make_shared<Armor>("Броня", def, 100);
+                    int dur = rng.getInt(30, 100);
+                    if (dur <= 0) dur = 50;
+                    newItem = std::make_shared<Armor>("Броня", def, dur);
                 } else {
                     int heal = rng.getInt(15, 30);
                     newItem = std::make_shared<Potion>("Зелье", heal, 1);

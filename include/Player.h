@@ -7,8 +7,7 @@
 #include <memory>
 #include <optional>
 #include "Entity.h"
-//#include "Item.h"
-// #include "Screen.h"
+
 
 class Armor;
 class Item;
@@ -23,6 +22,7 @@ private:
     int level;
     int checked_rooms;
     bool isDefending;
+    int MAX_HEALTH = 100;
     std::shared_ptr<Weapon> equippedWeapon;
     std::shared_ptr<Armor> equippedArmor;
     std::vector<std::shared_ptr<Item>> inventory;
