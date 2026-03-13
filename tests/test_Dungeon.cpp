@@ -2,21 +2,19 @@
 #include "../include/Dungeon.h"
 #include "../include/Player.h"
 
-// Тест конструктора подземелья
 TEST(DungeonTest, Constructor) {
     Player player("TestPlayer");
-    Dungeon dungeon(player);
+    const Dungeon dungeon(player);
 
     EXPECT_GT(dungeon.getRoomCount(), 0);
 }
 
-// Тест получения координат
 TEST(DungeonTest, GetCurrentCoordinates) {
     Player player("TestPlayer");
-    Dungeon dungeon(player);
+    const Dungeon dungeon(player);
 
-    int x = dungeon.getCurrentX();
-    int y = dungeon.getCurrentY();
+    const int x = dungeon.getCurrentX();
+    const int y = dungeon.getCurrentY();
 
     EXPECT_GE(x, 0);
     EXPECT_GE(y, 0);
@@ -24,78 +22,72 @@ TEST(DungeonTest, GetCurrentCoordinates) {
     EXPECT_LT(y, 4);
 }
 
-// Тест получения значения ячейки
 TEST(DungeonTest, GetCell) {
     Player player("TestPlayer");
-    Dungeon dungeon(player);
+    const Dungeon dungeon(player);
 
-    int x = dungeon.getCurrentX();
-    int y = dungeon.getCurrentY();
+    const int x = dungeon.getCurrentX();
+    const int y = dungeon.getCurrentY();
 
     EXPECT_GT(dungeon.getCell(x, y), 0);
     EXPECT_EQ(dungeon.getCell(-1, -1), 0);
     EXPECT_EQ(dungeon.getCell(10, 10), 0);
 }
 
-// Тест перемещения вправо
 TEST(DungeonTest, MoveRight) {
     Player player("TestPlayer");
     Dungeon dungeon(player);
 
-    int x = dungeon.getCurrentX();
-    int y = dungeon.getCurrentY();
+    const int x = dungeon.getCurrentX();
+    const int y = dungeon.getCurrentY();
 
     dungeon.moveRight();
     EXPECT_EQ(dungeon.getCurrentX(), x + 1);
     EXPECT_EQ(dungeon.getCurrentY(), y);
 }
 
-// Тест перемещения влево
 TEST(DungeonTest, MoveLeft) {
     Player player("TestPlayer");
     Dungeon dungeon(player);
 
-    int x = dungeon.getCurrentX();
-    int y = dungeon.getCurrentY();
+    const int x = dungeon.getCurrentX();
+    const int y = dungeon.getCurrentY();
 
     dungeon.moveLeft();
     EXPECT_EQ(dungeon.getCurrentX(), x - 1);
     EXPECT_EQ(dungeon.getCurrentY(), y);
 }
 
-// Тест перемещения вниз
 TEST(DungeonTest, MoveDown) {
     Player player("TestPlayer");
     Dungeon dungeon(player);
 
-    int x = dungeon.getCurrentX();
-    int y = dungeon.getCurrentY();
+    const int x = dungeon.getCurrentX();
+    const int y = dungeon.getCurrentY();
 
     dungeon.moveDown();
     EXPECT_EQ(dungeon.getCurrentX(), x);
     EXPECT_EQ(dungeon.getCurrentY(), y + 1);
 }
 
-// Тест перемещения вверх
 TEST(DungeonTest, MoveUp) {
     Player player("TestPlayer");
     Dungeon dungeon(player);
 
-    int x = dungeon.getCurrentX();
-    int y = dungeon.getCurrentY();
+    const int x = dungeon.getCurrentX();
+    const int y = dungeon.getCurrentY();
 
     dungeon.moveUp();
     EXPECT_EQ(dungeon.getCurrentX(), x);
     EXPECT_EQ(dungeon.getCurrentY(), y - 1);
 }
 
-// Тест получения комнаты
 TEST(DungeonTest, GetRoomAt) {
     Player player("TestPlayer");
     Dungeon dungeon(player);
 
-    int x = dungeon.getCurrentX();
-    int y = dungeon.getCurrentY();
+    const int x = dungeon.getCurrentX();
+    const int y = dungeon.getCurrentY();
 
     Room* room = dungeon.getRoomAt(x, y);
     ASSERT_NE(room, nullptr);
@@ -103,7 +95,6 @@ TEST(DungeonTest, GetRoomAt) {
     EXPECT_EQ(room->getCoordinates().second, y);
 }
 
-// Тест получения комнаты в стене
 TEST(DungeonTest, GetRoomAtWall) {
     Player player("TestPlayer");
     Dungeon dungeon(player);
@@ -118,7 +109,6 @@ TEST(DungeonTest, GetRoomAtWall) {
     }
 }
 
-// Тест наличия выхода
 TEST(DungeonTest, HasExit) {
     Player player("TestPlayer");
     Dungeon dungeon(player);
@@ -138,12 +128,11 @@ TEST(DungeonTest, HasExit) {
     EXPECT_TRUE(foundExit);
 }
 
-// Тест подсчета комнат
 TEST(DungeonTest, RoomCount) {
     Player player("TestPlayer");
-    Dungeon dungeon(player);
+    const Dungeon dungeon(player);
 
-    size_t roomCount = dungeon.getRoomCount();
+    const size_t roomCount = dungeon.getRoomCount();
 
     size_t manualCount = 0;
     for (int y = 0; y < 4; y++) {
@@ -159,16 +148,15 @@ TEST(DungeonTest, RoomCount) {
     EXPECT_LE(roomCount, 10);
 }
 
-// Тест перемещения
 TEST(DungeonTest, MoveConstructor) {
     Player player("TestPlayer");
     Dungeon original(player);
 
-    int x = original.getCurrentX();
-    int y = original.getCurrentY();
-    size_t count = original.getRoomCount();
+    const int x = original.getCurrentX();
+    const int y = original.getCurrentY();
+    const size_t count = original.getRoomCount();
 
-    Dungeon moved = std::move(original);
+    const Dungeon moved = std::move(original);
     EXPECT_EQ(moved.getCurrentX(), x);
     EXPECT_EQ(moved.getCurrentY(), y);
     EXPECT_EQ(moved.getRoomCount(), count);

@@ -1,11 +1,10 @@
-// Room.cpp
 #include "../include/Room.h"
 #include "../include/Random.h"
 #include "../include/Screen.h"
 #include "../include/Event.h"
 #include <iostream>
 
-Room::Room(RoomType roomType, Player& p) : type(roomType), isExplored(false) {
+Room::Room(const RoomType roomType, Player& p) : type(roomType), isExplored(false) {
     generateRoomContent(p);
 }
 
@@ -18,19 +17,15 @@ std::optional<Event*> Room::GetEvent() const {
 
 void Room::generateRoomContent(Player& p) {
     Random& rng = Random::getInstance();
-    // Если тип не задан (EMPTY), рандомно выбираем между EMPTY и EVENT
     if (type == RoomType::EMPTY) {
-        // 70% шанс на ивент, 30% на пустую
-        int chance = rng.getInt(1, 100);
-        if (chance <= 80) {
+        if (int chance = rng.getInt(1, 100); chance <= 80) {
             type = RoomType::EVENT;
         }
     }
 
-    // Если комната с ивентом - создаем событие
     if (type == RoomType::EVENT) {
         roomEvent = std::make_unique<Event>();
-        roomEvent->generateRandomEvent(1, p); // уровень 1 по умолчанию
+        roomEvent->generateRandomEvent(1, p);
     }
 }
 
@@ -47,7 +42,6 @@ void Room::look(Player& player) {
 
         case RoomType::EVENT:
             if (roomEvent) {
-                // Если событие уже завершено
                 if (roomEvent->getIsCompleted()) {
                     if (isExplored) {
                         Screen::drawMessage("Вы уже прошли это событие. В комнате ничего не изменилось.");
@@ -55,10 +49,9 @@ void Room::look(Player& player) {
                         Screen::drawMessage("Вы прошли событие. Комната выглядит обычно.");
                         isExplored = true;
                     }
-                    break;  // важно выйти!
+                    break;
                 }
 
-                // Если событие активно
                 if (isExplored) {
                     Screen::drawMessage("Вы возвращаетесь к событию...");
                 }
@@ -102,7 +95,6 @@ void Room::look(Player& player) {
                     Screen::drawMessage(result);
                 }
 
-                // Событие завершено
                 isExplored = true;
                 Screen::drawMessage("Вы прошли событие. Теперь комната пуста.");
 

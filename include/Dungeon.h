@@ -12,11 +12,10 @@
 
 class Dungeon {
 private:
-    std::vector<std::vector<int>> matrix;  // матрица подземелья
-    std::pair<int, int> currentRoomIndex;  // позиция игрока (x, y)
+    std::vector<std::vector<int>> matrix;
+    std::pair<int, int> currentRoomIndex;
     std::vector<Room> rooms_;
 
-    // Паттерн + его стартовые координаты
     struct PatternData {
         std::vector<std::vector<int>> layout;
         std::pair<int, int> startPos;
@@ -28,27 +27,25 @@ private:
     static constexpr int MAX_ROOMS = 10;
 
 public:
-    explicit Dungeon(Player& p);  // конструктор сразу выбирает рандомный паттерн
+    explicit Dungeon(Player& p);
 
     Dungeon(const Dungeon&) = delete;
     Dungeon& operator=(const Dungeon&) = delete;
     Dungeon(Dungeon&&) noexcept = default;
     Dungeon& operator=(Dungeon&&) noexcept = default;
 
-    // Движение
     void moveRight();
     void moveLeft();
     void moveUp();
     void moveDown();
 
-    // Геттеры
     int getCurrentX() const { return currentRoomIndex.first; }
     int getCurrentY() const { return currentRoomIndex.second; }
-    int getCell(int x, int y) const;  // получить значение в клетке
+    int getCell(int x, int y) const;
     size_t getRoomCount() const;
 
-    void generateRooms(Player& player); // Создает комнаты на основе матрицы
-    Room* getRoomAt(int x, int y); // Получить комнату по координатам
+    void generateRooms(Player& player);
+    Room* getRoomAt(int x, int y);
     const Room* getRoomAt(int x, int y) const;
 };
 
