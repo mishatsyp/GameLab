@@ -3,7 +3,6 @@
 
 #pragma once
 #include <string>
-#include <memory>
 #include <iostream>
 #include "Player.h"
 #include "Item.h"
@@ -20,10 +19,10 @@ public:
     virtual ~Item() = default;
 
     virtual void use(Player& player) = 0;
-    virtual std::string getStats() const = 0;
-    virtual std::string getItemType() const = 0;
-    virtual int getItemDurability() const=0;
-    const std::string& getName() const { return name; }
+    [[nodiscard]] virtual std::string getStats() const = 0;
+    [[nodiscard]] virtual std::string getItemType() const = 0;
+    [[nodiscard]] virtual int getItemDurability() const=0;
+    [[nodiscard]] const std::string& getName() const { return name; }
 };
 
 
@@ -34,15 +33,13 @@ class Potion : public Item {
 private:
     int healAmount;
 public:
-    Potion(int heal = 20);
+    explicit Potion(int heal = 20);
     Potion(const std::string& potionName, int heal, int dur);
     void use(Player& player) override;
-    std::string getStats() const override; //сколько раз может отхилить
-    std::string getItemType() const override;
-    virtual int getItemDurability() const override;
-    // virtual std::unique_ptr<Item> clone() const override;
-
-    int getHealAmount() const { return healAmount; } //сколько хилит в целом
+    [[nodiscard]] std::string getStats() const override; //сколько раз может отхилить
+    [[nodiscard]] std::string getItemType() const override;
+    [[nodiscard]] int getItemDurability() const override;
+    [[nodiscard]] int getHealAmount() const { return healAmount; } //сколько хилит в целом
 };
 
 class Weapon : public Item {
@@ -54,13 +51,13 @@ public:
     Weapon(const std::string& weaponName, int damage);
     Weapon(const std::string& weaponName, int damage, int dur);
 
-    virtual void use(Player& player) override;
-    virtual std::string getStats() const override; //возвращает урон меча
+    void use(Player& player) override;
+    [[nodiscard]] std::string getStats() const override; //возвращает урон меча
     void reduceDurability(int amount = 5);
-    int getDamage() const { return damage; }
-    int getItemDurability() const override;
-    std::string getItemType() const override;
-    bool isBroken() const { return durability <= 0; }
+    [[nodiscard]] int getDamage() const { return damage; }
+    [[nodiscard]] int getItemDurability() const override;
+    [[nodiscard]] std::string getItemType() const override;
+    [[nodiscard]] bool isBroken() const { return durability <= 0; }
 };
 
 
@@ -71,18 +68,16 @@ private:
     static constexpr int MAX_DURABILITY = 100;
 
 public:
-    Armor(int bonus = 5);
+    explicit Armor(int bonus = 5);
     Armor(const std::string& armorName, int defen, int dur);
-    virtual void use(Player& player) override;
-    std::string getStats() const override; // - возвращает durability
-    std::string getItemType() const override;
-    int getItemDurability() const override;
-    // virtual std::unique_ptr<Item> clone() const override;
-
+    void use(Player& player) override;
+    [[nodiscard]] std::string getStats() const override; // - возвращает durability
+    [[nodiscard]] std::string getItemType() const override;
+    [[nodiscard]] int getItemDurability() const override;
     void reduceDurability(int amount = 5);
-    int getDefense() const { return defense; }
-    int getDurability() const { return durability; }
-    bool isBroken() const { return durability <= 0; }
+    [[nodiscard]] int getDefense() const { return defense; }
+    [[nodiscard]] int getDurability() const { return durability; }
+    [[nodiscard]] bool isBroken() const { return durability <= 0; }
 };
 
 #endif

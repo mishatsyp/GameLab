@@ -1,6 +1,6 @@
 #include "../include/Item.h"
 
-Item::Item(const std::string& itemName, int dur) : name(itemName), durability(dur) {}
+Item::Item(const std::string& itemName, const int dur) : name(itemName), durability(dur) {}
 Potion::Potion(int heal) : Item("Зелье здоровья", 3), healAmount(heal) {}
 Potion::Potion(const std::string& potionName, int heal, int dur) : Item(potionName, dur), healAmount(heal) {}
 void Potion::use(Player& player) {
@@ -53,7 +53,7 @@ void Weapon::reduceDurability(int amount) {
 
 
 
-Armor::Armor(int defense) : Item("Броня", 100), defense(defense) {}
+Armor::Armor(int defense) : Item("Броня", 20), defense(defense) {}
 
 Armor::Armor(const std::string& armorName, int def, int dur): Item(armorName, dur), defense(def) {
     if (dur <= 0) durability = 30;
