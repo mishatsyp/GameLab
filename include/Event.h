@@ -14,12 +14,12 @@
 
 class Event {
 private:
-    std::string description;      // Описание того, что случилось
-    std::vector<std::string> outcomes; // Варианты действий (2-3 варианта)
-    int healthEffect;             // Влияние на здоровье (может быть отрицательным)
+    std::string description;
+    std::vector<std::string> outcomes;
+    int healthEffect;
     std::vector<std::map<std::string, int>> rewards;
     std::string ItemReward;
-    bool isCompleted;             // Завершено ли событие
+    bool isCompleted;
     std::unique_ptr<Monster> monster;
     std::vector<std::string> goodMessages;
     std::vector<std::string> badMessages;
@@ -29,24 +29,8 @@ private:
     std::vector<std::string> itemType;
 public:
     Event();
-    /**
-     * @brief Генерация случайного события
-     * @param level уровень подземелья (влияет на сложность)
-     */
     void generateRandomEvent(int level, Player& p);
-    /**
-     * @brief Запуск события
-     * @param player ссылка на игрока
-     */
-    // void trigger(Player& player);
-    // /**
-    //  * @brief Выбор варианта действия
-    //  * @param choice номер выбранного варианта (0, 1 или 2)
-    //  * @param player ссылка на игрока
-    //  * @return текст результата выбора
-    //  */
     std::string makeChoice(int choice, Player& player);
-    // Геттеры
     std::string getDescription() const { return description; }
     const std::vector<std::string>& getOutcomes() const { return outcomes; }
     bool getIsCompleted() const { return isCompleted; }
@@ -56,14 +40,7 @@ public:
     Monster* getMonster() const;
 
 private:
-    /**
-     * @brief Генерация случайного текста для события
-     */
     void generateRandomText(int level);
-
-    /**
-     * @brief Применение последствий к игроку
-     */
     void applyEffects(Player& player, int choiceHealth, const std::string& choiceItem);
     void generateMonsterEvent(int level, Player& p);
 };

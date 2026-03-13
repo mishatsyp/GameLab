@@ -13,17 +13,14 @@ Event::Event() : healthEffect(0), isCompleted(false) {}
 void Event::generateRandomEvent(int level, Player& p) {
     Random& rng = Random::getInstance();
 
-    // 30% шанс на встречу с монстром
     if (rng.getBool(0.3)) {
         generateMonsterEvent(level, p);
     } else {
         generateRandomText(level);
     }
 
-    // Случайное влияние на здоровье (отрицательное или положительное)
     healthEffect = rng.getInt(-15 - level * 2, 10 + level);
 
-    // 30% шанс получить предмет (только для не-монстров)
     if (!monster && rng.getBool(0.3)) {
         std::vector<std::string> possibleItems = {
             "Зелье здоровья",
@@ -42,12 +39,10 @@ void Event::generateRandomEvent(int level, Player& p) {
 void Event::generateMonsterEvent(int level, Player& p) {
     Random& rng = Random::getInstance();
 
-    // Создаем монстра
     monster = std::make_unique<Monster>(Monster::createRandomMonster(level));
 
     std::vector<std::string> monsterEventTemplates;
 
-    // Шаблоны событий в зависимости от уровня
     if (level <= 2) {
         monsterEventTemplates = {
             "На вас набрасывается " + monster->getName() + "!",
@@ -73,7 +68,6 @@ void Event::generateMonsterEvent(int level, Player& p) {
 
     description = monsterEventTemplates[rng.getInt(0, static_cast<int>(monsterEventTemplates.size()) - 1)];
 
-    // Добавляем информацию о монстре
     description += "\n\n" + monster->getName() + " имеет " +
                    std::to_string(monster->getHealth()) + " здоровья.\n";
     description += "Ваш урон: " + std::to_string(p.getTotalDamage());
@@ -90,12 +84,11 @@ void Event::generateRandomText(int level) {
         std::vector<std::string> badMessages;
         std::vector<int> goodHeal;
         std::vector<int> badDamage;
-        std::vector<int> itemChance;  // шанс выпадения предмета 0-100
-        std::vector<std::string> itemType;  // Weapon, Armor, Potion, Any
+        std::vector<int> itemChance;
+        std::vector<std::string> itemType;
     };
 
     std::vector<EventTemplate> templates = {
-        // 1. Сундук
         {
             "Вы находите старый деревянный сундук в углу комнаты.",
             {"Аккуратно открыть", "Пнуть ногой", "Пройти мимо"},
@@ -115,7 +108,6 @@ void Event::generateRandomText(int level) {
             {"Any", "Potion", ""}
         },
 
-        // 2. Алтарь
         {
             "В центре комнаты стоит древний алтарь с тускло мерцающим камнем.",
             {"Помолиться", "Забрать камень", "Осмотреть символы"},
@@ -135,7 +127,6 @@ void Event::generateRandomText(int level) {
             {"Potion", "Armor", "Weapon"}
         },
 
-        // 3. Скелет воина
         {
             "У стены прислонен скелет в истлевших доспехах. Рядом лежит меч.",
             {"Взять меч", "Обыскать скелет", "Похоронить останки"},
@@ -155,7 +146,6 @@ void Event::generateRandomText(int level) {
             {"Weapon", "Armor", "Potion"}
         },
 
-        // 4. Магический фонтан
         {
             "В центре комнаты бьет небольшой фонтан с голубоватой светящейся водой.",
             {"Напиться", "Набрать воды", "Бросить монетку"},
@@ -175,7 +165,6 @@ void Event::generateRandomText(int level) {
             {"", "Potion", "Armor"}
         },
 
-        // 5. Логово пауков
         {
             "Комната опутана паутиной. В темноте виднеются несколько крупных пауков.",
             {"Сжечь паутину", "Пробраться тихо", "Бежать"},
@@ -195,7 +184,6 @@ void Event::generateRandomText(int level) {
             {"Potion", "Weapon", ""}
         },
 
-        // 6. Разрушенный мост
         {
             "Дорогу преграждает глубокий разлом. Когда-то здесь был мост.",
             {"Попытаться перепрыгнуть", "Найти обходной путь", "Вернуться назад"},
@@ -215,7 +203,6 @@ void Event::generateRandomText(int level) {
             {"", "Potion", "Armor"}
         },
 
-        // 7. Грибная поляна
         {
             "На полу растут странные светящиеся грибы. Воздух наполнен спорами.",
             {"Съесть гриб", "Собрать грибы", "Обойти стороной"},
@@ -235,7 +222,6 @@ void Event::generateRandomText(int level) {
             {"", "Potion", "Armor"}
         },
 
-        // 8. Торговец
         {
             "В углу стоит человек в плаще. Он предлагает купить у него зелье.",
             {"Купить зелье", "Украсть", "Игнорировать"},
@@ -255,7 +241,6 @@ void Event::generateRandomText(int level) {
             {"Potion", "Potion", ""}
         },
 
-        // 9. Древняя статуя
         {
             "В центре комнаты стоит каменная статуя с драгоценными камнями вместо глаз.",
             {"Вынуть камни", "Поклониться статуе", "Осмотреть постамент"},
@@ -275,7 +260,6 @@ void Event::generateRandomText(int level) {
             {"Armor", "Potion", "Weapon"}
         },
 
-        // 10. Забытая библиотека
         {
             "Вы попадаете в комнату, заставленную древними книжными шкафами.",
             {"Почитать книги", "Поискать тайник", "Забрать свитки"},
@@ -328,7 +312,6 @@ std::string Event::handleBattle(Player& player) {
         result += "Здоровье " + monster->getName() + ": " + std::to_string(monster->getHealth()) + "\n";
 
         if (playerTurn) {
-            // Ход игрока
             result += "\nВаш ход. Выберите действие:\n";
             result += "1. Атаковать\n";
             result += "2. Защищаться (уменьшает урон, но тратит прочность оружия)\n";
@@ -339,7 +322,7 @@ std::string Event::handleBattle(Player& player) {
             std::cout << "Ваш выбор: ";
             std::cin >> choice;
 
-            if (choice == 1) { // Атака
+            if (choice == 1) {
                 if (rng.getBool(0.8)) {
                     int damage = player.getDamage();
                     monster->setHealth(monster->getHealth() - damage);
@@ -354,11 +337,10 @@ std::string Event::handleBattle(Player& player) {
                     result += "Вы промахнулись!\n";
                 }
             }
-            else if (choice == 2) { // Защита
+            else if (choice == 2) {
                 result += "Вы встаете в защитную стойку!\n";
                 player.setDefending(true);
 
-                // Уменьшаем прочность
                 if (player.getEquippedWeapon()) {
                     player.getEquippedWeapon()->reduceDurability(1);
                     if (player.getEquippedWeapon()->isBroken()) {
@@ -394,7 +376,6 @@ std::string Event::handleBattle(Player& player) {
             playerTurn = false;
         }
         else {
-            // Ход монстра
             result += "\nХод " + monster->getName() + "!\n";
 
             if (rng.getBool(0.7)) {
@@ -516,7 +497,6 @@ std::string Event::makeChoice(int choice, Player& player) {
 
     player.setCheckedRooms(player.getCheckedRooms() + 1);
 
-    // Если это событие с монстром
     if (monster) {
         std::string result;
         if (choice == 0) {
@@ -528,9 +508,8 @@ std::string Event::makeChoice(int choice, Player& player) {
         return result;
     }
 
-    // Обычное событие
     Random& rng = Random::getInstance();
-    bool isGood = rng.getBool(0.6);  // 60% хороший исход
+    bool isGood = rng.getBool(0.6);
 
     std::string result;
 
@@ -538,11 +517,9 @@ std::string Event::makeChoice(int choice, Player& player) {
         result = goodMessages[choice];
         player.setHealth(player.getHealth() + goodHeal[choice]);
 
-        // Шанс на предмет
         if (rng.getInt(1, 100) <= itemChance[choice]) {
             std::shared_ptr<Item> newItem;
 
-            // Создаем предмет в зависимости от типа
             if (itemType[choice] == "Weapon") {
                 int dmg = rng.getInt(5, 15);
                 newItem = std::make_shared<Weapon>("Оружие", dmg, 100);
@@ -591,8 +568,9 @@ std::string Event::makeChoice(int choice, Player& player) {
     return result;
 }
 bool Event::hasMonster() const {
-    return monster != nullptr;
+    return monster ? true : false;
 }
+
 Monster* Event::getMonster() const {
-    return monster.get();
+    return monster ? monster.get() : nullptr;
 }
