@@ -1,5 +1,5 @@
 #include "../include/Player.h"
-#include "../include/Item.h"      // <-- ЭТО ДОБАВИТЬ!
+#include "../include/Item.h"
 #include "../include/Screen.h"
 
 Player::Player(const std::string& playerName)
@@ -28,7 +28,7 @@ bool Player::useItem(const size_t itemIndex) {
 
 void Player::showInventory() const {Screen::drawInventory(*this);}
 
-int Player::getInventorySize() const {return inventory.size();}
+int Player::getInventorySize() const {return static_cast<int>(inventory.size());}
 
 std::optional<std::shared_ptr<Item>> Player::getItem(size_t itemIndex) const {
     if (itemIndex < inventory.size() && inventory[itemIndex]) {

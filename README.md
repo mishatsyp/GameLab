@@ -8,7 +8,7 @@ using modern language features and an object-oriented approach.
 
 ## Developers
 - Michael - classes Player, GameEngine
-- Suzanne - classes Room, Dungeon
+- Syuzi - classes Room, Dungeon
 - Lubov' - classes Event, Random, Entity
 - Leonid - classes Item, Screen
 

@@ -3,11 +3,7 @@
 
 #pragma once
 #include <memory>
-#include <optional>
 #include <chrono>
-#include <vector>
-#include <functional>
-#include "Screen.h"
 #include <variant>
 #include <string>
 
@@ -33,25 +29,17 @@ private:
     bool isRunning;
     int currentLevel;
     
-    // Для замера времени (требование из ТЗ)
-    // using Clock = std::chrono::high_resolution_clock;
-    // using TimePoint = std::chrono::time_point<Clock>;
-    // TimePoint gameStartTime;
-    
 public:
     GameEngine();
     ~GameEngine();
 
     GameEngine(const GameEngine&) = delete;
     GameEngine& operator=(const GameEngine&) = delete;
-
     GameEngine(GameEngine&&) noexcept = default;
     GameEngine& operator=(GameEngine&&) noexcept = default;
 
     void menu();
-
     bool initialize();
-
     NextLevelResult nextLevel();
 
     class GameException : public std::runtime_error {

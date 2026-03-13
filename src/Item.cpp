@@ -81,10 +81,10 @@ void Armor::reduceDurability(int amount) {
 }
 
 void Weapon::use(Player& player) {
-    player.equipWeapon(std::make_unique<Weapon>(*this));  // экипируем копию
+    player.equipWeapon(std::make_shared<Weapon>(*this));  // экипируем копию
     std::cout << "Вы экипировали " << name << " (урон +" << damage << ")\n";
 }
 void Armor::use(Player& player) {
     std::cout << "Вы надели " << name << " (защита +" << defense << ")\n";
-    player.equipArmor(std::make_unique<Armor>(*this));  // экипируем копию
+    player.equipArmor(std::make_shared<Armor>(*this));  // экипируем копию
 }

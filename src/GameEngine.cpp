@@ -1,11 +1,10 @@
 #include "../include/Dungeon.h"
 #include "../include/Player.h"
 #include "../include/Item.h"
-#include "../include/Player.h"
 #include "../include/GameEngine.h"
-#include "../include/Dungeon.h"
+#include "../include/Screen.h"
 
-GameEngine::~GameEngine() {}
+GameEngine::~GameEngine() = default;
 
 GameEngine::GameEngine()
     : isRunning(false)
@@ -243,14 +242,6 @@ bool GameEngine::initialize() {
         return false;
     }
 }
-
-// void GameEngine::handleCurrentRoom() {
-//     Screen::drawCurrentRoomInfo(*currentDungeon);
-// }
-
-// void GameEngine::handleBattle(Player& p) {
-//     .handleBattle(p);
-// }
 
 NextLevelResult GameEngine::nextLevel() {
     if (!currentDungeon) {
