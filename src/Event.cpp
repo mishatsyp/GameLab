@@ -8,13 +8,8 @@
 #include <string>
 #include <memory>
 
-// Конструктор по умолчанию
 Event::Event() : healthEffect(0), isCompleted(false) {}
 
-/**
- * @brief Генерация случайного события
- * @param level уровень подземелья (влияет на сложность)
- */
 void Event::generateRandomEvent(int level, Player& p) {
     Random& rng = Random::getInstance();
 
@@ -44,9 +39,6 @@ void Event::generateRandomEvent(int level, Player& p) {
     }
 }
 
-/**
- * @brief Генерация события с монстром
- */
 void Event::generateMonsterEvent(int level, Player& p) {
     Random& rng = Random::getInstance();
 

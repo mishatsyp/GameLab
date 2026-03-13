@@ -66,7 +66,7 @@ bool GameEngine::initialize() {
 
                 case 2:
                     player->showInventory();
-                    std::cout << "\nИспользовать: u [номер]  |  Назад: b\n";
+                    std::cout << "\nКоманды: u [номер] - использовать, d [номер] - выбросить, b - назад\n";
 
                     char command;
                     int itemIndex;
@@ -95,7 +95,20 @@ bool GameEngine::initialize() {
                         }
                     } else if (command == 'b' || command == 'B') {
                         std::cout << "Возврат к основным действиям.\n";
-                    } else {
+                    } else if (command == 'd' || command == 'D') {
+                        std::cin >> itemIndex;
+                        int inventorySize = player->getInventorySize();
+                        if (itemIndex >= 1 && itemIndex <= inventorySize) {
+                            auto itemOpt = player->getItem(itemIndex - 1);
+                            if (itemOpt.has_value()) {
+                                auto item = itemOpt.value();
+                                std::cout << "Вы выбросили: " << item->getName() << "\n";
+                                player->removeItem(itemIndex - 1);
+                            }
+                        } else {
+                            std::cout << "Неверный номер предмета!\n";
+                        }
+                    }else {
                         std::cout << "Неверная команда!\n";
                     }
                     break;
